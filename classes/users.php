@@ -4,7 +4,7 @@ namespace ma;
 
 class Users {
 
-	private static $users;
+	private static $users = [];
 	private static $pattern = [
 		"username",
 		"hash",
@@ -15,7 +15,7 @@ class Users {
 		"created",
 		"modified"
 	];
-	private static $path;
+	private static $path = false;
 
 
 	// load users from : separated text file
@@ -53,10 +53,54 @@ class Users {
 					$key = $line_array[array_keys($line_array)[0]];
 				}
 
-				self::$users[$key] = new User($line_array);
+				self::add_user($key, $line_array);
+				// self::$users[$key] = new User($line_array);
 			}
 		}
 	}
+
+
+	// add user
+	// data is an array of key=>value pairs
+	public static function add_user($user, $data) {
+
+		$time = time();
+
+		$new_user = new User(array_combine(self::$pattern,array_fill(0, count(self::$pattern), "")));
+
+		$new_user->set($data);
+
+		$new_user->set("created", $time);
+		$new_user->set("modified", $time);
+		$new_user->set("status", $time);
+
+		self::$users[$user] = new User($data);
+
+	}
+
+
+	// remove user
+	public static function remove_user($user) {
+
+		if (self::user_exists($user)) {
+
+			unset(self::$users[$user]);
+		}
+	}
+
+
+	// update user
+	public static function update_user($user, $data) {
+
+		$time = time();
+
+		if (self::user_exists($user)) {
+
+			self::$users[$user]->set($data);
+		}
+	}
+
+
 
 
 	// save users
@@ -79,6 +123,19 @@ class Users {
 
 		if (isset(self::$users[$username])) {
 			return self::$users[$username];
+		}
+
+		else {
+			return false;
+		}
+	}
+
+
+	// user exists
+	public static function user_exists($user) {
+
+		if (self::get_user($user)) {
+			return self::get_user($user);
 		}
 	}
 

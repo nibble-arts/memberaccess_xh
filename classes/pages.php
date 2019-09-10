@@ -47,7 +47,7 @@ class Pages {
 					"name" => $page["url"],
 					"url" => $u[$idx],
 					"id" => $idx,
-					"groups" => new Groups ($groups),
+					"groups" => "",//new Groups ($groups),
 					"active" =>  $page["ma_active"],
 					"description" => $page["ma_description"]
 				];

@@ -26,7 +26,9 @@ class Group {
 			// split users
 			$data["users"] = $this->split_users($data["users"]);
 
-			$this->data = $data;
+			foreach($data as $key=>$entry) {
+				$this->data[$key] = $entry;
+			}
 		}
 
 		elseif ($value !== false) {
@@ -58,6 +60,21 @@ class Group {
 	}
 
 
+	// add user
+	public function add_user($user) {
+		array_push($this->data["users"], $user);
+	}
+
+
+	// remove user from group
+	public function remove_user($user) {
+
+		if (($key = array_search($user, $this->data["users"])) !== false) {
+			unset($this->data["users"][$key]);
+		}
+	}
+
+
 	// check if group has user
 	public function has_user($user) {
 
@@ -68,6 +85,12 @@ class Group {
 		else {
 			return false;
 		}
+	}
+
+
+	// magic method
+	public function __call($key, $attr) {
+		return $this->get($key);
 	}
 
 

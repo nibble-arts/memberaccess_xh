@@ -46,7 +46,7 @@ class View {
 		$o = '<form method="post" action="' . CMSIMPLE_URL.'?'.Pages::current() . '">';
 			$o .= '<div class="ma_login_block">';
 				
-				if ($error_code = Access::failure()) {
+				if ($error_code = Message::failure()) {
 					$o .= '<div class="xh_warning">';
 						$o .= self::text($error_code);
 					$o .= '</div>';
@@ -147,7 +147,7 @@ class View {
 		$o = "";
 
 
-		if ($error_code = Access::failure()) {
+		if ($error_code = Message::failure()) {
 			$o .= '<div class="xh_warning">';
 				$o .= self::text($error_code);
 			$o .= '</div>';
@@ -262,14 +262,14 @@ class View {
 
 
 			// save success info
-			if (Access::success()) {
+			if (Message::success()) {
 				$o .= '<div class="xh_info">';
 					$o .= self::text("profile_saved");
 				$o .= '</div>';
 			}
 
 
-			elseif ($error_code = Access::failure()) {
+			elseif ($error_code = Message::failure()) {
 				$o .= '<div class="xh_warning">';
 					$o .= self::text($error_code);
 				$o .= '</div>';

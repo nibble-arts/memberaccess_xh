@@ -4,26 +4,24 @@ namespace ma;
 
 class Groupss {
 
-	private static $groups;
+	private static $groups = [];
 	private static $pattern = [
 		"group",
 		"users",
 		"created",
 		"modified"
 	];
-	private static $path;
+	private static $path = false;
+
 
 	// load groups from : separated text file
 	// assign values by pattern array
 	// first pattern entry is key
 	public static function load($path) {
 
-		$path = false;
-
 		if ($data = File::read($path)) {
 
 			self::$path = $path;
-			self::$groups = [];
 
 			$ret = [];
 			$lines = explode ("\n", $data);
@@ -48,8 +46,56 @@ class Groupss {
 					$key = $line_array[array_keys($line_array)[0]];
 				}
 
-				self::$groups[$key] = new Group($line_array);
+				self::add_group($key, $line_array);
 			}
+		}
+	}
+
+
+	// add group to list
+	// data is an array of key=>value pairs
+	// overwrites if already exists
+	public static function add_group($group, $data) {
+
+		$time = time();
+
+		$new_group = new Group(array_combine(self::$pattern,array_fill(0, count(self::$pattern), "")));
+
+		$new_group->set($data);
+
+		$new_group->set("created", $time);
+		$new_group->set("modified", $time);
+
+		self::$groups[$group] = new Group($new_group);
+	}
+
+
+	public static function remove_group($group) {
+
+		if (self::group_exists($group)) {
+			unset(self::$groups[$group]);
+		}
+	}
+
+
+	// add user to group
+	public static function add_user_to_group($user, $group) {
+
+		if ($group = self::group_exists($group)) {
+			$group->add_user($user);
+		}
+	}
+
+
+	public static function remove_user_from_groups() {
+		
+	}
+
+
+	public static function remove_user_from_group($user, $group) {
+
+		if ($group = self::group_exists($group)) {
+			$group->remove_user($user);
 		}
 	}
 
@@ -68,7 +114,7 @@ class Groupss {
 	// or false
 	public static function group_exists($groupname) {
 
-		if (isset($groups[$groupname])) {
+		if (isset(self::$groups[$groupname])) {
 			return self::$groups[$groupname];
 		}
 
@@ -102,7 +148,7 @@ class Groupss {
 				$users = self::get_users($group);
 
 				if ($users && in_array($user, $users)) {
-					return true;
+					return $group;
 				}
 			}
 		}
@@ -136,6 +182,21 @@ class Groupss {
 		if (($group = self::get_group($groupname)) !== false) {
 			return $group->get("users");
 		}
+	}
+
+
+	// returns an array of groups of a user
+	public static function get_groups_of_user($user) {
+
+		$temp = [];
+
+		foreach (self::$groups as $group) {
+			if (self::user_is_in_group($user, $group->group())) {
+				$temp[] = $group->group();
+			}
+		}
+
+		return $temp;
 	}
 
 

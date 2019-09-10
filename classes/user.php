@@ -22,7 +22,10 @@ class User {
 
 		// set data from assoz array
 		if (is_array($data)) {
-			$this->data = $data;
+
+			foreach($data as $key=>$entry) {
+				$this->data[$key] = $entry;
+			}
 		}
 
 		elseif ($value !== false) {
@@ -46,5 +49,11 @@ class User {
 		else {
 			return false;
 		}
+	}
+
+
+	// magic method
+	public function __call($key, $attr) {
+		return $this->get($key);
 	}
 }
