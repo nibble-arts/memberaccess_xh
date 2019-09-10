@@ -1,0 +1,68 @@
+.ma_login_block {
+	/*position: relative;*/
+	margin: auto;
+	padding: 10px;
+	width: 350px;
+	border: 1px solid #7C7C7C;
+}
+
+.ma_logged_block {
+	padding: 0;
+	margin: 0;
+}
+
+.ma_unlogged_block {
+	padding: 0;
+	margin: 0;
+	float: right;
+}
+
+.ma_login_link {
+	float: right;
+}
+
+.ma_value {
+	/*position: relative;*/
+	/*margin: 5px 0 5px 0;*/
+	/*height: 25px;*/
+	/*padding: 5px 15px 5px 15px;*/
+}
+
+.ma_label {
+	/*position: absolute;*/
+	/*top: 0px;*/
+	/*left: 20px;*/
+	/*font-size: 12px;*/
+	/*font-weight: bold;*/
+	/*background-color: #FFFFFF;*/
+	/*height: 14px;*/
+	margin: 5px 0 0 0;
+	color: #606060;
+}
+
+.ma_field {
+	/*position: relative;*/
+	/*color: #828282;*/
+	/*height: 35px;*/
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
+	margin-bottom: 10px;
+}}
+
+ .ma_button {
+ 	position: relative;
+ 	height: 25px;
+	margin: 5px 0 5px 0;
+}
+
+.ma_big_icon {
+	width: 50px;
+	float: right;
+}
+
+.ma_small_icon {
+	width: 20px;
+	margin: 0 5px 0 5px;
+	vertical-align: middle;
+}
