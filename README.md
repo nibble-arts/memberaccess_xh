@@ -33,9 +33,11 @@ Shows the profile data. Except the username, all information can be changed.
 pages
 -----
 
-under developement
+Shows a list of the resticted pages with a direct link the user can access.
 
 administration
 --------------
+
+The member administration. The administration can be used on the frontend using the admin group on a special page.
 
 under developement
