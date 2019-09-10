@@ -406,7 +406,6 @@ class Access {
 		self::$users = self::parse(File::read(self::$path . "users.txt"), self::$users_pattern);
 
 		self::$group = self::parse(File::read(self::$path . "group.txt"), self::$group_pattern);
-
 	}
 	
 	

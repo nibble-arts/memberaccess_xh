@@ -362,12 +362,77 @@ class View {
 	// member administration
 	public static function administration () {
 		
-		$o = "> member administration";
-		
+		$o = "";
+
+		$users = Access::users();
+		asort($users);
+
+		$o .= '<form method="post" action="' . '">';
+
+			$o .= '<table>';
+
+			$o .= '<th>Username</th>';
+			$o .= '<th>Full name</th>';
+			$o .= '<th>groups</th>';
+			$o .= '<th>Status</th>';
+
+			foreach ($users as $user) {
+
+				$o .= '<tr>';
+					$o .= '<td>' . $user->username() . '</td>';
+					$o .= '<td>' . $user->fullname() . '</td>';
+					$o .= '<td>';
+						if ($user->groups()) {
+							$o .= HTML::input(["type" => "text", "name" => "ma_".$user->username(), "value" => $user->groups()->list(",")]);
+						}
+					$o .= '</td>';
+					$o .= '<td>' . View::status($user->status()) . '</td>';
+				$o .= '</tr>';
+			}
+
+			$o .= '</table>';
+
+		$o .= HTML::input([
+			"type" => "submit",
+			"value" => "Speichern"
+		]);
+
+		$o .= HTML::input([
+			"type" => "hidden",
+			"value" => "ma_save_members"
+		]);
+
+		$o .= '</form>';
+
 		return $o;
 	}
 	
+
+	// return timestamp as human readable time
+	public static function htime($timestamp) {
+		return date('d.m.Y', $timestamp);
+	}
 	
+
+	// return status text
+	public static function status($status) {
+
+		if ($status == -1) {
+			$ret = "aktive";		
+		}
+
+		elseif ($status == 0) {
+			$ret = "inactive";
+		}
+
+		else {
+			$ret = "not confirmed";
+		}
+
+		return $ret;
+	}
+
+
 	// edit tab
 	public static function tab() {
 		return "access tab";

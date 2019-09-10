@@ -106,4 +106,14 @@ class Groups {
 	public function array () {
 		return $this->groups;
 	}
+
+
+	public function list($delimitor = false) {
+
+		if (!$delimitor) {
+			$delimitor = ", ";
+		}
+
+		return implode($delimitor, array_keys($this->groups));
+	}
 }
