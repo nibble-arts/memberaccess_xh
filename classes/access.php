@@ -24,6 +24,9 @@ class Access {
 	private static $admin = false;
 	
 
+
+	// NEW
+
 	// ================================================
 	// pattern for the user data format
 	private static $users_pattern = [
@@ -402,6 +405,10 @@ class Access {
 
 		// path for files
 		self::$path =  './' . $filepath . "memberaccess/";
+
+		Users::load(self::$path . "users.txt");
+		Groupss::load(self::$path . "group.txt");
+
 
 		self::$users = self::parse(File::read(self::$path . "users.txt"), self::$users_pattern);
 
