@@ -373,6 +373,7 @@ class View {
 
 			$o .= '<th>Username</th>';
 			$o .= '<th>Full name</th>';
+			$o .= '<th>email</th>';
 			$o .= '<th>groups</th>';
 			$o .= '<th>Status</th>';
 
@@ -381,6 +382,9 @@ class View {
 				$o .= '<tr>';
 					$o .= '<td>' . $user->username() . '</td>';
 					$o .= '<td>' . $user->fullname() . '</td>';
+					$o .= '<td>';
+						$o .= HTML::a(["content" => $user->email(), "href" => "mailto:" . $user->email()]);
+					$o .= '</td>';
 					$o .= '<td>';
 						if ($user->groups()) {
 							$o .= HTML::input(["type" => "text", "name" => "ma_".$user->username(), "value" => $user->groups()->list(",")]);
