@@ -55,23 +55,7 @@ class Access {
 		View::init($text);
 
 		Users::load(self::config("basepath") . "memberaccess/users.txt");
-		Groupss::load(self::config("basepath") . "memberaccess/group.txt");
-
-// debug(Groupss::get_group_names());
-
-// Groupss::add_user_to_group("ich","admin");
-// Groupss::remove_user_from_group("adsf","admin");
-Users::remove_user("test");
-Users::save();
-
-debug(Users::get_user("tom"));
-// debug(Groupss::get_users("admin"));
-
-
-		// load users
-		// DEPRECATED
-		// self::load(self::config("basepath"));
-		// END DEPRECATED
+		Groups::load(self::config("basepath") . "memberaccess/group.txt");
 
 	}
 
@@ -93,9 +77,7 @@ debug(Users::get_user("tom"));
 
 			$user_data = USERS::get_user($user);
 
-			// $user_data = Access::users($user, true);
-
-			// is valid user
+			// save valid user
 			if ($user_data) {
 				self::set_user($user_data);
 				self::$logged = true;
@@ -112,8 +94,7 @@ debug(Users::get_user("tom"));
 				// login user
 					if (($user = Session::get("ma_user")) && ($password = Session::get("ma_password"))) {
 
-						$user_data = Access::users($user, true);
-
+						$user_data = Users::get_user($user);
 						// user found
 						if ($user_data) {
 
@@ -127,7 +108,6 @@ debug(Users::get_user("tom"));
 								Message::reset();
 
 								self::$logged = true;
-
 
 								Session::set_session("ma_user", $user);
 								Session::set_session("ma_logged", true);
@@ -158,7 +138,7 @@ debug(Users::get_user("tom"));
 				break;
 			
 
-				// logout user
+			// logout user
 			case "ma_logout":
 
 				self::reset();
@@ -172,9 +152,8 @@ debug(Users::get_user("tom"));
 
 			case "ma_get_password":
 
-
 				// check user
-				$user = Access::users(Session::param("ma_username"), true);
+				$user = Users::get_user(Session::param("ma_username"));
 
 				// user exists
 				if ($user) {
@@ -186,14 +165,13 @@ debug(Users::get_user("tom"));
 						$pwd = bin2hex(openssl_random_pseudo_bytes(6));
 
 						// set password
-						$update = new Data();
-						$update->add([
+						$update = new User();
+						$update->set([
 							"hash" => Hash::create($pwd)
 						]);
 
 						// save new password
-						self::update_user($user->get("username"), $update);
-
+						Users::update_user($user->get("username"), $update);
 
 						// send mail
 						$result = Mail::send([
@@ -225,26 +203,22 @@ debug(Users::get_user("tom"));
 
 			case "ma_save_user":
 
-				$user_data = new Data(self::$users_pattern);
-
+				$user_data = new User(self::$users_pattern);
 
 				// password change -> check
 				if (Session::get("ma_password_new") != Session::get("ma_password_check")) {
-
 					Message::failure("password_check_failure");
 				}
-
 
 
 				// add new user
 				else {
 
-
 					// register -> user already exists
 					if (Session::get("function") == "register") {
 
 						// user name already exists
-						if (Access::get_user(Session::get("ma_username"))) {
+						if (Users::get_user(Session::get("ma_username"))) {
 
 							Message::failure("user_exists");
 						}
@@ -254,14 +228,13 @@ debug(Users::get_user("tom"));
 						// add user
 						else {
 
-
 							// username dont exists
 							if (($username = Session::get("ma_username")) == "") {
 								Message::failure("no_username");
 							}
 
 							// fullname dont exists
-							elseif (($username = Session::get("ma_username")) == "") {
+							elseif (($username = Session::get("ma_fullname")) == "") {
 								Message::failure("no_fullname");
 							}
 
@@ -281,7 +254,7 @@ debug(Users::get_user("tom"));
 
 								$uuid = uniqid();
 
-								$user_data->add([
+								$user_data->set([
 									"hash" => Hash::create($hash),
 									"username" => Session::get("ma_username"),
 									"fullname" => Session::get("ma_fullname"),
@@ -290,7 +263,7 @@ debug(Users::get_user("tom"));
 								]);
 
 								// add user to userfile
-								self::add_user(Session::get("ma_username"), $user_data);
+								Users::add_user(Session::get("ma_username"), $user_data);
 
 								// self::load(self::config("basepath"));
 								self::$logged = true;
@@ -306,6 +279,8 @@ debug(Users::get_user("tom"));
 									"subject" => View::text("confirm_subject"),
 									"message" => View::text("confirm_message") . "\n\n" . $link
 								]));
+
+// debug(View::text("confirm_message") . "\n\n" . $link);
 							}
 						}
 					}
@@ -316,26 +291,21 @@ debug(Users::get_user("tom"));
 					// update user
 					else {
 
-
 						// set new password hash
 						if (Session::get("ma_password_new") != "") {
-
-							self::$user->add("hash", Hash::create(Session::get("ma_password_new")));
+							self::$user->set("hash", Hash::create(Session::get("ma_password_new")));
 						}
-
 
 						// collect data
 						foreach (self::$users_pattern as $key) {
 
 							if (($value = Session::param("ma_" . $key)) !== false) {
-
-								self::$user->add($key, $value);
+								self::$user->set($key, $value);
 							}
 						}
 
-
 						// save user and update access user
-						self::update_user(Access::user("username"), self::$user);
+						Users::update_user(Access::user("username"), self::$user);
 						Message::success(true);
 					}
 				}
@@ -350,21 +320,24 @@ debug(Users::get_user("tom"));
 				if (($uuid = Session::param("ma_uuid")) && Session::param("ma_username")) {
 
 
-					$user = Access::users(Session::param("ma_username"), true);
+					$user = Users::get_user(Session::param("ma_username"));
 
 					// check for user uuid
 					if ($user && $user->get("id") == $uuid) {
 
-						$update = new Data();
-						$update->add(["id" => "", "status" => "-1"]);
+						$user->set("id", "");
+						$user->set("status", -1);
 
-						self::update_user($user->get("username"), $update);
+						Users::update_user($user->get("username"), $user);
+					}
+
+					else {
+						Message::failure("confirm_expired");
 					}
 				}
 
 				break;
 		}
-
 
 		return $o;
 	}
@@ -389,10 +362,9 @@ debug(Users::get_user("tom"));
 		self::$user = $user_object;
 
 		// check if user is admin
-		if (Groupss::user_is_in_group($user_object->username(), "admin")) {
+		if (Groups::user_is_in_group($user_object->username(), "admin")) {
 			self::$admin = true;
 		}
-
 	}
 
 
@@ -404,42 +376,11 @@ debug(Users::get_user("tom"));
 	public static function save () {
 
 		Users::save();
-		Groupss::save();
+		Groups::save();
 
 	}
 	
 	
-/* ****************************
- * maipulate user
-*/
-
-	// remove user
-	public static function remove_user ($user) {
-		return self::remove(self::$users, $user);
-	}
-	
-
-	// update user
-	public static function update_user ($user, $data) {
-		
-		$data->add("modified", time());
-
-		return self::update(self::$users, $user, $data, self::$users_pattern);
-	}
-	
-
-
-/* ****************************
- * maipulate group
-*/
-
-
-	// update group
-	private static function update_group ($group, $data) {
-		return self::update(self::$group, $group, $data, self::$group_pattern);
-	}
-	
-
 /* ****************************
  * global maipulation
 */
@@ -555,11 +496,6 @@ debug(Users::get_user("tom"));
 	}
 
 	
-	// check for failure
-	public static function failure() {
-		return Message::failure();
-	}
-	
 	// check for logged user
 	public static function logged() {
 
@@ -593,7 +529,7 @@ debug(Users::get_user("tom"));
 				}
 
 				// 
-				self::$failure = "confirm_not";
+				Message::failure("confirm_not");
 
 				return false;
 			}
@@ -606,18 +542,6 @@ debug(Users::get_user("tom"));
 		return self::$admin;
 	}
 
-	
-// get user data by username
-	public static function get_user ($user) {
-
-		if (isset(self::$users[$user])) {
-			return self::$users[$user];
-		}
-		else {
-			return false;
-		}
-	}
-	
 	
 	// get group array
 	public static function group($name = false, $flag = false) {
@@ -636,25 +560,6 @@ debug(Users::get_user("tom"));
 		}
 	}
 	
-
-	// get user array
-	public static function users ($name = false, $flag = false) {
-		
-		if ($name && isset(self::$users[$name])) {
-
-			return self::$users[$name];
-		}
-
-// flag is false -> return all groups
-		elseif (!$flag) {
-			return self::$users;
-		}
-		else {
-			return false;
-		}
-	}
-
-
 
 	// get config parameter
 	public static function config($name = false) {

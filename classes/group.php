@@ -7,36 +7,49 @@ class Group {
 	private $data;
 
 
-	public function __construct($data = false) {
+	// create group object
+	// optional: set pattern
+	// optional: add data values
+	// pattern: array of keys
+	// values: key => value pairs
+	public function __construct($pattern = false, $value = false) {
 
 		$this->data = [];
 
-		if ($data) {
-			$this->set($data);
+		if (is_array($pattern)) {
+
+			// create empty values
+			$value = array_combine($pattern,array_fill(0, count($pattern), ""));
+
+			$this->set($value);
 		}
 	}
 
 
 	// set group data by 
+	// if data is array: key => value pairs
+	// if data is key string: value is value string
 	public function set($data, $value = false) {
 
 		// set data from assoz array
 		if (is_array($data)) {
 
-			// split users
-			$data["users"] = $this->split_users($data["users"]);
-
 			foreach($data as $key=>$entry) {
 				$this->data[$key] = $entry;
 			}
+
+			// split users
+			$this->data["users"] = $this->split_users($data["users"]);
 		}
 
+		// set key => value
 		elseif ($value !== false) {
 
 			// split users
 			if ($data == "users") {
 				$value = $this->split_users($value);
 			}
+
 			$this->data[$data] = $value;
 		}
 	}

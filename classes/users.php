@@ -54,7 +54,6 @@ class Users {
 				}
 
 				self::add_user($key, $line_array);
-				// self::$users[$key] = new User($line_array);
 			}
 		}
 	}
@@ -62,20 +61,36 @@ class Users {
 
 	// add user
 	// data is an array of key=>value pairs
+	// data is User object: add
 	public static function add_user($user, $data) {
 
 		$time = time();
 
-		$new_user = new User(array_combine(self::$pattern,array_fill(0, count(self::$pattern), "")));
+		// add object
+		if (is_object($data)) {
+			$new_user = $data;
+		}
+		else {
+			$new_user = new User(self::$pattern);
+			$new_user->set($data);
+		}
 
-		$new_user->set($data);
+		// add status and times if not present
+		if (!$new_user->created()) {
+			$new_user->set("created", $time);
+		}
 
-		$new_user->set("created", $time);
-		$new_user->set("modified", $time);
-		$new_user->set("status", $time);
+		if (!$new_user->modified()) {
+			$new_user->set("modified", $time);
+		}
 
-		self::$users[$user] = new User($data);
+		if (!$new_user->status()) {
+			$new_user->set("status", $time);
+		}
 
+		self::$users[$user] = $new_user;
+
+		self::save();
 	}
 
 
@@ -86,6 +101,8 @@ class Users {
 
 			unset(self::$users[$user]);
 		}
+
+		self::save();
 	}
 
 
@@ -95,9 +112,10 @@ class Users {
 		$time = time();
 
 		if (self::user_exists($user)) {
-
 			self::$users[$user]->set($data);
 		}
+
+		self::save();
 	}
 
 
@@ -115,6 +133,12 @@ class Users {
 	// return list of usernames
 	public static function get_user_names() {
 		return array_keys(self::$users);
+	}
+
+
+	// get users array
+	public static function get_users() {
+		return self::$users;
 	}
 
 

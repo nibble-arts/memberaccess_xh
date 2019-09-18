@@ -2,7 +2,7 @@
 
 namespace ma;
 
-class Groupss {
+class Groups {
 
 	private static $groups = [];
 	private static $pattern = [
@@ -28,20 +28,19 @@ class Groupss {
 
 			// iterate lines
 			foreach ($lines as $line) {
-				
+
 				// live not empty
 				if (strlen($line) > 0) {
 					
 					$line_array = [];
 					$parts = explode (":", $line);
-					
+
 					// set key/val pairs
 					foreach (self::$pattern as $key) {
 						
 						$val = array_shift($parts);
 						$line_array[$key] = trim($val);
 					}
-
 					// use first pattern value as key
 					$key = $line_array[array_keys($line_array)[0]];
 				}
@@ -59,14 +58,14 @@ class Groupss {
 
 		$time = time();
 
-		$new_group = new Group(array_combine(self::$pattern,array_fill(0, count(self::$pattern), "")));
+		$new_group = new Group(self::$pattern);
 
 		$new_group->set($data);
 
 		$new_group->set("created", $time);
 		$new_group->set("modified", $time);
 
-		self::$groups[$group] = new Group($new_group);
+		self::$groups[$group] = $new_group;
 	}
 
 

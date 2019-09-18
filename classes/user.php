@@ -7,11 +7,15 @@ class User {
 	private $data;
 
 
+	// construct object
+	// data is array of keys
 	public function __construct($data = false) {
 
-		$this->data = [];
-
 		if ($data) {
+
+			// convert pattern to keys
+			$data = array_combine($data,array_fill(0, count($data), ""));
+
 			$this->set($data);
 		}
 	}

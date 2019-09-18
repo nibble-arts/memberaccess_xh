@@ -58,7 +58,6 @@ class Pages {
 				self::$pages[] = $idx;
 			}
 		}
-
 	}
 	
 	
@@ -84,13 +83,16 @@ class Pages {
 
 			// get user groups
 			if (Access::user()) {
-				$user_groups = Access::user()->groups();
+				// $user_groups = Groups::get_groups_of_user(Access::user()->username());
 			}
 
 
 
 			// iterate restricted pages
 			foreach (self::$restricted as $idx => $page) {
+
+// debug($user_groups);
+// debug($page);
 
 				// check group rights and access
 				if ((!$user_groups || (!$page["groups"]->group_exists($user_groups)) || !Access::logged()) && !Access::admin()) {

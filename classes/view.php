@@ -245,7 +245,8 @@ class View {
 
 		$o = "";
 		$user = Access::user();
-
+debug("profile");
+debug($user);
 
 		// on register use profile as target page
 		if ($function == "register") {
@@ -364,7 +365,7 @@ class View {
 		
 		$o = "";
 
-		$users = Access::users();
+		$users = Users::get_users();
 		asort($users);
 
 		$o .= '<form method="post" action="' . '">';
