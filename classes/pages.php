@@ -83,16 +83,16 @@ class Pages {
 
 			// get user groups
 			if (Access::user()) {
-				// $user_groups = Groups::get_groups_of_user(Access::user()->username());
+				$user_groups = new Group(Groups::get_groups_of_user(Access::user()->username()));
 			}
-
 
 
 			// iterate restricted pages
 			foreach (self::$restricted as $idx => $page) {
 
-// debug($user_groups);
-// debug($page);
+//TODO => look if user groups match page groups
+debug($user_groups);
+debug($page);
 
 				// check group rights and access
 				if ((!$user_groups || (!$page["groups"]->group_exists($user_groups)) || !Access::logged()) && !Access::admin()) {
