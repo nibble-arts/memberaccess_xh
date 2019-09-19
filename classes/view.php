@@ -111,17 +111,14 @@ class View {
 
 		$o = '<div class="ma_unlogged_block">';
 
-			// $o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/unlock.png">';
-
+			// $o .= View::text("logging_as") . " ";
 			$o .= $name;
-
 
 			// if logout on restricted page, use logout_page parameter for new page
 			// or allways use logout page is true
 			if (Pages::is_restricted(Pages::current()) || Access::config("logout_allways_use_link")) {
 				$logout_page = Access::config("logout_page");
 			}
-
 
 
 			// profile
@@ -132,7 +129,7 @@ class View {
 
 			// logout
 			$o .= ' <a href="' . CMSIMPLE_URL.'?'. $logout_page . '&action=ma_logout">';
-				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png">';
+				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png" title="Profil">';
 			// $o .= self::text ("logging_logout");
 			$o .= '</a>';
 		$o .= '</div>';
@@ -155,7 +152,7 @@ class View {
 
 
 		// save success info
-		elseif (Access::success()) {
+		elseif (Message::success()) {
 			$o .= '<div class="xh_info">';
 				$o .= self::text("email_sent");
 			$o .= '</div>';
@@ -245,8 +242,6 @@ class View {
 
 		$o = "";
 		$user = Access::user();
-debug("profile");
-debug($user);
 
 		// on register use profile as target page
 		if ($function == "register") {

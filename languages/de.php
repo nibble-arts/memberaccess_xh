@@ -37,6 +37,7 @@ $plugin_tx['memberaccess']['logging_profile']="Einstellungen";
 $plugin_tx['memberaccess']['logging_request']="Anfordern";
 $plugin_tx['memberaccess']['logging_failure']="Benutzername oder Passwort sind nicht korrekt";
 $plugin_tx['memberaccess']['logging_text']="Dieser Bereich bietet weitere Angebote, die mit einer Registrierung zugänglich sind. Wenn Sie Mitglied in einem VÖFA-Klub sind, können Sie vom Administrator noch mehr Funktionen freigeschalten lassen.";
+$plugin_tx['memberaccess']['logging_as']="Angemeldet als";
 
 $plugin_tx['memberaccess']['error_user_exists']="Benutzername existiert schon";
 $plugin_tx['memberaccess']['error_group_exists']="Gruppe existiert schon";

@@ -39,7 +39,9 @@ class Group {
 			}
 
 			// split users
-			$this->data["users"] = $this->split_users($data["users"]);
+			if (isset($this->data["users"])) {
+				$this->data["users"] = $this->split_users($data["users"]);
+			}
 		}
 
 		// set key => value

@@ -165,10 +165,7 @@ class Access {
 						$pwd = bin2hex(openssl_random_pseudo_bytes(6));
 
 						// set password
-						$update = new User();
-						$update->set([
-							"hash" => Hash::create($pwd)
-						]);
+						$update = ["hash" => Hash::create($pwd)];
 
 						// save new password
 						Users::update_user($user->get("username"), $update);
@@ -180,6 +177,8 @@ class Access {
 							"message" => View::text("logging_forgotten_mail_message") . "\n\n" . $pwd
 						]);
 
+
+						// create messages
 						if ($result === false) {
 							Message::success(true);
 						}
@@ -219,7 +218,6 @@ class Access {
 
 						// user name already exists
 						if (Users::get_user(Session::get("ma_username"))) {
-
 							Message::failure("user_exists");
 						}
 
@@ -280,7 +278,6 @@ class Access {
 									"message" => View::text("confirm_message") . "\n\n" . $link
 								]));
 
-// debug(View::text("confirm_message") . "\n\n" . $link);
 							}
 						}
 					}

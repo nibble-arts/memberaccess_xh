@@ -111,15 +111,22 @@ class Groups {
 	// check if group exists
 	// return group
 	// or false
-	public static function group_exists($groupname) {
+	public static function group_exists($groups) {
 
-		if (isset(self::$groups[$groupname])) {
-			return self::$groups[$groupname];
+		// if komma separated string, make array
+		if (is_string($groups)) {
+			$groups = explode(",", $groups);
 		}
 
-		else {
-			return false;
+		// check all groups
+		foreach ($groups as $group) {
+
+			if (isset(self::$groups[$group])) {
+				return self::$groups[$group];
+			}
 		}
+
+		return false;
 	}
 
 
@@ -137,10 +144,10 @@ class Groups {
 	public static function user_is_in_group ($user, $groups) {
 
 		if (is_string($groups)) {
-			$groups = explode(",", $groups);
+			$groups = array_filter(explode(",", $groups));
 		}
 
-		if (is_array($groups)) {
+		if (count($groups)) {
 
 			foreach ($groups as $group) {
 
@@ -150,9 +157,16 @@ class Groups {
 					return $group;
 				}
 			}
+
+			// no group found
+			return false;
 		}
 
-		return false;
+		// empty group list -> grant
+		else {
+			return true;
+		}
+
 	}
 
 
