@@ -77,17 +77,32 @@ class Groups {
 	}
 
 
-	// add user to group
-	public static function add_user_to_group($user, $group) {
+	// add user to groups
+	public static function add_user_to_group($user, $groups) {
 
-		if ($group = self::group_exists($group)) {
-			$group->add_user($user);
+		if (is_string($groups)) {
+			$groups = explode(",", $groups);
 		}
+
+
+		foreach ($groups as $group) {
+
+			if ($new_group = self::group_exists($group)) {
+				$new_group->add_user($user);
+			}
+		}
+
 	}
 
 
-	public static function remove_user_from_groups() {
-		
+	// removes a user from all groups
+	public static function remove_user_from_groups($user) {
+
+		$groups = self::get_groups_of_user($user);
+
+		foreach ($groups as $group) {
+			self::remove_user_from_group($user, $group);
+		}
 	}
 
 

@@ -68,10 +68,7 @@ class Access {
 
 		self::reset();
 
-
-//TODO change ma_logged to session parameter
-
-
+// debug(Session::show());
 		// user ist logged
 		if (($user = Session::session("ma_user")) && Session::session("ma_logged")) {
 
@@ -332,6 +329,63 @@ class Access {
 						Message::failure("confirm_expired");
 					}
 				}
+
+				break;
+
+
+			case "ma_save_members":
+
+				$user_ary = [];
+				Users::reset();
+
+
+				// create users list from http parameters
+				foreach (Session::get_param_keys() as $param) {
+
+					$p_ary = explode("_", $param);
+
+					// check for x_y_z... count
+					if (count($p_ary) > 2) {
+
+						if ($p_ary[0] == "ma") {
+
+							$key = $p_ary[1];
+							$username = $p_ary[2];
+
+							// save groups
+							if ($key == "groups") {
+
+								// remove user from groups
+								Groups::remove_user_from_groups($username);
+
+								// add user to new groups
+								Groups::add_user_to_group($username, Session::param($param));
+
+								// save groups
+								Groups::save();
+							}
+
+							// save user data
+							else {
+
+								if (!isset($user_ary[$username])) {
+									$user_ary[$username] = [];
+								}
+
+								$user_ary[$username][$key] = Session::param($param);
+							}
+						}
+					}
+				}
+
+
+				// add changed users
+				foreach ($user_ary as $user) {
+					Users::add_user($user["username"], $user, false);
+				}
+
+				// save users
+				Users::save();
 
 				break;
 		}

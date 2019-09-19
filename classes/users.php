@@ -59,10 +59,15 @@ class Users {
 	}
 
 
+	public static function reset() {
+		self::$users = [];
+	}
+
+
 	// add user
 	// data is an array of key=>value pairs
 	// data is User object: add
-	public static function add_user($user, $data) {
+	public static function add_user($user, $data, $save = true) {
 
 		$time = time();
 
@@ -90,7 +95,10 @@ class Users {
 
 		self::$users[$user] = $new_user;
 
-		self::save();
+		// save as default
+		if ($save !== false) {
+			self::save();
+		}
 	}
 
 

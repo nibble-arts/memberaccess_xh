@@ -96,6 +96,12 @@ class Session {
 	}
 
 
+	// get parameter keys
+	public static function get_param_keys() {
+		return array_keys(self::$params);
+	}
+
+
 	// get cookie
 	public static function cookie($name) {
 		
