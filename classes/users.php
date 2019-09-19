@@ -7,6 +7,7 @@ class Users {
 	private static $users = [];
 	private static $pattern = [
 		"username",
+		"uuid",
 		"hash",
 		"fullname",
 		"email",
@@ -91,6 +92,10 @@ class Users {
 
 		if (!$new_user->status()) {
 			$new_user->set("status", $time);
+		}
+
+		if (!$new_user->uuid()) {
+			$new_user->set("uuid", uniqid("", true));
 		}
 
 		self::$users[$user] = $new_user;

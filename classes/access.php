@@ -337,20 +337,20 @@ class Access {
 
 				$user_ary = [];
 				Users::reset();
-
-
+// debug(Session::show());
 				// create users list from http parameters
 				foreach (Session::get_param_keys() as $param) {
 
 					$p_ary = explode("_", $param);
-
+// debug($p_ary);
 					// check for x_y_z... count
 					if (count($p_ary) > 2) {
 
-						if ($p_ary[0] == "ma") {
+						if (array_shift($p_ary) == "ma") {
 
-							$key = $p_ary[1];
-							$username = $p_ary[2];
+							$key = array_shift($p_ary);
+							// $username = implode("_", $p_ary);
+							$username = $p_ary[0];
 
 							// save groups
 							if ($key == "groups") {
@@ -369,6 +369,7 @@ class Access {
 							else {
 
 								if (!isset($user_ary[$username])) {
+// debug($username);
 									$user_ary[$username] = [];
 								}
 
@@ -574,7 +575,7 @@ class Access {
 				if ((time() - $status) > self::config("register_timeout")) {
 
 					// remove user
-					self::remove_user(self::$user["username"]);
+					Users::remove_user(self::$user["username"]);
 
 					return false;
 				}

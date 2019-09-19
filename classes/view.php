@@ -379,9 +379,12 @@ class View {
 			$o .= '<th>ID</th>';
 			$o .= '<th>Status</th>';
 
+			$idx = 0;
+
 			foreach ($users as $user) {
 
-				$name = str_replace(" ", "_", $user->username());
+				// $name = str_replace(" ", "_", $user->username());
+				$name = $user->uuid();
 
 				$o .= '<tr>';
 					// username
