@@ -321,6 +321,21 @@ class Access {
 				break;
 
 
+			case "ma_remove_user_from_group":
+
+				Groups::remove_user_from_group(Session::param("user"), Session::param("group"));
+				Groups::save();
+
+				break;
+
+
+			case "ma_add_user_to_group":
+
+				Groups::add_user_to_group(Session::param("user"), Session::param("group"));
+				Groups::save();
+				break;
+
+
 			case "confirm":
 
 				if (($uuid = Session::param("ma_uuid")) && Session::param("ma_username")) {

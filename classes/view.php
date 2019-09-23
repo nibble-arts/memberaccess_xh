@@ -357,9 +357,10 @@ class View {
 
 	// member administration
 	public static function administration () {
+
 		global $onload;
 		
-		$o = "";
+		$o = "<h2>User Administration</h2>";
 
 		// return script include
 		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
@@ -376,7 +377,7 @@ class View {
 			$o .= '</div>';
 		}
 
-		$o .= '<form method="post" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
+		$o .= '<form method="post" name="ma_admin_users" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
 
 			$o .= HTML::input([
 				"type" => "submit",
@@ -420,7 +421,7 @@ class View {
 
 					// groups
 					$o .= '<td>';
-						$o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+						$o .= HTML::p(["type" => "text", "name" => "ma_groups_" . $name, "content" => implode(",", Groups::get_groups_of_user($user->username()))]);
 					$o .= '</td>';
 
 					// groups
@@ -478,9 +479,87 @@ class View {
 
 		$o .= '</form>';
 
+
+
+		//=================================================
+		// administrate groups
+
+		$groups = Groups::get_groups();
+		asort($groups);
+
+		$o .= "<h2>Gruppen Administration</h2>";
+
+
+
+		$idx = 0;
+
+		foreach ($groups as $group) {
+
+			$o .= '<form method="post" name="ma_admin_groups" action="' . CMSIMPLE_URL . '?' . Pages::current() .'">';
+
+				$user_list = [];
+				$name = $idx++;
+
+				// group name
+				$o .= '<hr><h4>' . $group->group() . '</h4>';
+
+				// users in group
+				$user_list = self::create_user_list($group);
+				$o .= '<p>' . implode(", ", $user_list) . '</p>';
+
+				// create list of unused users
+				$new_user_list = array_diff(Users::get_user_names(), $group->users());
+
+				// add user selector
+				$o .= HTML::select($new_user_list, [
+					"name" => "user"
+				]);
+
+				$o .= " " . HTML::input([
+					"type" => "submit",
+					"name" => "ma_add_user",
+					"value" => View::text("user_add")
+				]);
+
+				// hidden data
+				$o .= " " . HTML::input([
+					"type" => "hidden",
+					"name" => "group",
+					"value" => $group->group()
+				]);
+
+				$o .= " " . HTML::input([
+					"type" => "hidden",
+					"name" => "action",
+					"value" => "ma_add_user_to_group"
+				]);
+
+			$o .= '</form>';
+
+		}
+
+
 		return $o;
 	}
 	
+
+	private static function create_user_list($group) {
+
+		$user_list = [];
+
+		// users
+		foreach ($group->users() as $user) {
+
+			$user_list[] = HTML::a([
+				"content" => $user,
+				"href" => CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_remove_user_from_group&group=' . $group->group() . '&user=' . $user,
+				"title" => View::text("group_remove_user")
+			]);
+		}
+
+		return $user_list;
+	}
+
 
 	// return timestamp as human readable time
 	public static function htime($timestamp) {

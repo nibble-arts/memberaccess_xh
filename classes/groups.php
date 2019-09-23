@@ -84,11 +84,14 @@ class Groups {
 			$groups = explode(",", $groups);
 		}
 
-
 		foreach ($groups as $group) {
 
 			if ($new_group = self::group_exists($group)) {
-				$new_group->add_user($user);
+
+				// add if not in group
+				if (!self::user_is_in_group($user, $group)) {
+					$new_group->add_user($user);
+				}
 			}
 		}
 
@@ -225,6 +228,12 @@ class Groups {
 		}
 
 		return $temp;
+	}
+
+
+	// get groups array
+	public static function get_groups() {
+		return self::$groups;
 	}
 
 
