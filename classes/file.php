@@ -17,11 +17,14 @@ class File {
 	}
 	
 	public static function write ($path, $data) {
+
+		// $ret = false;
 		// debug($data);
 		$ret = file_put_contents($path, $data);
 
 		if ($ret === false) {
-			return View::text("file_write_error");
+			Message::failure("file_write_error");
+			// return View::text("file_write_error");
 		}
 
 		return false;

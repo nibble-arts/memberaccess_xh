@@ -363,6 +363,12 @@ class View {
 		$users = Users::get_users();
 		asort($users);
 
+		if ($error_code = Message::failure()) {
+			$o .= '<div class="xh_warning">';
+				$o .= self::text($error_code);
+			$o .= '</div>';
+		}
+
 		$o .= '<form method="post" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
 
 			$o .= HTML::input([
@@ -384,7 +390,7 @@ class View {
 			foreach ($users as $user) {
 
 				// $name = str_replace(" ", "_", $user->username());
-				$name = $user->uuid();
+				$name = uniqid("", true);
 
 				$o .= '<tr>';
 					// username
@@ -450,7 +456,7 @@ class View {
 			$o .= HTML::input([
 				"type" => "hidden",
 				"name" => "action",
-				"value" => "ma_save_members"
+				"value" => "ma_save_users"
 			]);
 
 

@@ -333,16 +333,16 @@ class Access {
 				break;
 
 
-			case "ma_save_members":
+			case "ma_save_users":
 
 				$user_ary = [];
 				Users::reset();
-// debug(Session::show());
+
 				// create users list from http parameters
 				foreach (Session::get_param_keys() as $param) {
 
 					$p_ary = explode("_", $param);
-// debug($p_ary);
+
 					// check for x_y_z... count
 					if (count($p_ary) > 2) {
 
@@ -369,7 +369,7 @@ class Access {
 							else {
 
 								if (!isset($user_ary[$username])) {
-// debug($username);
+
 									$user_ary[$username] = [];
 								}
 
@@ -378,7 +378,6 @@ class Access {
 						}
 					}
 				}
-
 
 				// add changed users
 				foreach ($user_ary as $user) {
