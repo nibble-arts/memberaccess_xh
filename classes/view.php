@@ -288,8 +288,8 @@ class View {
 				// draw formular
 				$o .= '</p>';
 
+					// show label
 					$o .= HTML::div(["content" => View::text($idx), "class" => "ma_label"]);
-
 
 					// edit -> username can't be changed
 					if ($type == "disabled") {
@@ -357,8 +357,15 @@ class View {
 
 	// member administration
 	public static function administration () {
+		global $onload;
 		
 		$o = "";
+
+		// return script include
+		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
+
+		// add to onload
+		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
 
 		$users = Users::get_users();
 		asort($users);
@@ -384,6 +391,7 @@ class View {
 			$o .= '<th>Groups</th>';
 			$o .= '<th>ID</th>';
 			$o .= '<th>Status</th>';
+			$o .= '<th>Aktion</th>';
 
 			$idx = 0;
 
@@ -424,6 +432,15 @@ class View {
 					$o .= '<td>';
 						$o .= HTML::input(["type" => "text", "name" => "ma_status_" . $name, "value" => $user->status()]);
 						// $o .= View::status($user->status());
+					$o .= '</td>';
+
+					// action
+					$o .= '<td>';
+						$o .= HTML::a([
+							"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
+							"class" => "delete",
+							"content" => "del"
+						]);
 					$o .= '</td>';
 				$o .= '</tr>';
 

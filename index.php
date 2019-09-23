@@ -69,7 +69,7 @@ function memberaccess($function) {
 
 		case "profile":
 			if (ma\Access::logged()) {
-				$o .= ma\View::profile("update", ["username" => "disabled", "fullname" => "text", "email" => "text", "password_new" => "password", "password_check" => "password"]);
+				$o .= ma\View::profile("update", ["username" => "disabled", "fullname" => "text", "email" => "text", "password_change" => "password", "password_check" => "password"]);
 			}
 			break;
 

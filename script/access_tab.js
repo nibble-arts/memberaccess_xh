@@ -1,5 +1,5 @@
 // init access tab
-function access_init() {
+function ma_access_init() {
 	
 	// set init state
 	ma_access_change_tab(jQuery("#ma_active[type='checkbox']")[0]);

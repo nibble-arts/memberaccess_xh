@@ -201,7 +201,7 @@ class Access {
 				$user_data = new User(self::$users_pattern);
 
 				// password change -> check
-				if (Session::get("ma_password_new") != Session::get("ma_password_check")) {
+				if (Session::get("ma_password_new") != Session::get("ma_password_check") && Session::get("ma_password_change") != Session::get("ma_password_check")) {
 					Message::failure("password_check_failure");
 				}
 
@@ -289,6 +289,11 @@ class Access {
 							self::$user->set("hash", Hash::create(Session::get("ma_password_new")));
 						}
 
+						// set new password hash
+						if (Session::get("ma_password_change") != "") {
+							self::$user->set("hash", Hash::create(Session::get("ma_password_change")));
+						}
+
 						// collect data
 						foreach (self::$users_pattern as $key) {
 
@@ -304,6 +309,14 @@ class Access {
 				}
 
 
+
+				break;
+
+
+			case "ma_del_user":
+
+				Users::remove_user(Session::param("user"));
+				Groups::remove_user_from_groups(Session::param("user"));
 
 				break;
 
