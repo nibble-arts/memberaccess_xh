@@ -137,7 +137,7 @@ class Pages {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "restricted: " . print_r(self::$restricted, true) . "<br>";
 

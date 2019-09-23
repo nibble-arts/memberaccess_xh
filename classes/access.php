@@ -68,7 +68,6 @@ class Access {
 
 		self::reset();
 
-// debug(Session::show());
 		// user ist logged
 		if (($user = Session::session("ma_user")) && Session::session("ma_logged")) {
 
@@ -336,6 +335,8 @@ class Access {
 			case "ma_save_users":
 
 				$user_ary = [];
+				$group_ary = [];
+
 				Users::reset();
 
 				// create users list from http parameters
@@ -350,42 +351,46 @@ class Access {
 
 							$key = array_shift($p_ary);
 							// $username = implode("_", $p_ary);
-							$username = $p_ary[0];
+							$idx = $p_ary[0];
 
 							// save groups
 							if ($key == "groups") {
 
+								$group_ary[$idx] = Session::param($param);
+
 								// remove user from groups
-								Groups::remove_user_from_groups($username);
+								// Groups::remove_user_from_groups($username);
 
 								// add user to new groups
-								Groups::add_user_to_group($username, Session::param($param));
+								// Groups::add_user_to_group($username, Session::param($param));
 
 								// save groups
-								Groups::save();
+								// Groups::save();
 							}
 
 							// save user data
 							else {
 
-								if (!isset($user_ary[$username])) {
-
-									$user_ary[$username] = [];
+								if (!isset($user_ary[$idx])) {
+									$user_ary[$idx] = [];
 								}
 
-								$user_ary[$username][$key] = Session::param($param);
+								$user_ary[$idx][$key] = Session::param($param);
 							}
 						}
 					}
 				}
 
 				// add changed users
-				foreach ($user_ary as $user) {
+				foreach ($user_ary as $idx => $user) {
 					Users::add_user($user["username"], $user, false);
+					Groups::remove_user_from_groups($user["username"]);
+					Groups::add_user_to_group($user["username"], $group_ary[$idx]);
 				}
 
 				// save users
 				Users::save();
+				Groups::save();
 
 				break;
 		}
@@ -629,7 +634,7 @@ class Access {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "user: " . print_r(self::$user) . "<br>";
 		$o .= "info: " . Message::success() . "<br>";

@@ -140,7 +140,7 @@ class Session {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "http: " . print_r(self::$params, true) . "<br>";
 		$o .= "session: " . print_r(self::$session, true) . "<br>";

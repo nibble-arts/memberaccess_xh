@@ -258,6 +258,13 @@ class Groups {
 
 		return $file_string;
 	}
+
+
+	// return debug infos
+	public static function debug() {
+
+		return self::$groups;
+	}
 }
 
 ?>

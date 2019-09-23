@@ -389,8 +389,7 @@ class View {
 
 			foreach ($users as $user) {
 
-				// $name = str_replace(" ", "_", $user->username());
-				$name = uniqid("", true);
+				$name = $idx++;
 
 				$o .= '<tr>';
 					// username
@@ -512,7 +511,7 @@ class View {
 
 	// ======================================================
 	// global views
-	// show login/logout on all pages
+	// display login/logout on all pages
 	public static function display_all_pages(&$c) {
 
 
@@ -524,7 +523,7 @@ class View {
 				// hide on login page
 				if (!Pages::current(Access::config("login_page"))) {
 
-					// show logout
+					// disply logout
 					if (Access::logged()) {
 					    $c[$i] = View::logged(Access::user("fullname")) . $page;
 					}
@@ -538,7 +537,7 @@ class View {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "text: " . print_r(self::$text, true);
 
