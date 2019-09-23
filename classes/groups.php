@@ -88,10 +88,7 @@ class Groups {
 
 			if ($new_group = self::group_exists($group)) {
 
-				// add if not in group
-				if (!self::user_is_in_group($user, $group)) {
-					$new_group->add_user($user);
-				}
+				$new_group->add_user($user);
 			}
 		}
 
@@ -233,7 +230,7 @@ class Groups {
 
 	// get groups array
 	public static function get_groups() {
-		return self::$groups;
+		return array_filter(self::$groups);
 	}
 
 

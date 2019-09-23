@@ -377,107 +377,167 @@ class View {
 			$o .= '</div>';
 		}
 
-		$o .= '<form method="post" name="ma_admin_users" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
+		// $o .= '<form method="post" name="ma_admin_users" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
 
-			$o .= HTML::input([
-				"type" => "submit",
-				"value" => "Speichern"
-			]);
+		// 	$o .= HTML::input([
+		// 		"type" => "submit",
+		// 		"value" => "Speichern"
+		// 	]);
 
-			$o .= '<table>';
+		// 	$o .= '<table>';
 
-			$o .= '<th>Username</th>';
-			$o .= '<th>Full name</th>';
-			$o .= '<th>Email</th>';
-			$o .= '<th>Groups</th>';
-			$o .= '<th>ID</th>';
-			$o .= '<th>Status</th>';
-			$o .= '<th>Aktion</th>';
+		// 	$o .= '<th>Username</th>';
+		// 	$o .= '<th>Full name</th>';
+		// 	$o .= '<th>Email</th>';
+		// 	$o .= '<th>Groups</th>';
+		// 	$o .= '<th>ID</th>';
+		// 	$o .= '<th>Status</th>';
+		// 	$o .= '<th>Aktion</th>';
 
-			$idx = 0;
+		// 	$idx = 0;
 
-			foreach ($users as $user) {
+		// 	foreach ($users as $user) {
 
-				$name = $idx++;
+		// 		$name = $idx++;
 
-				$o .= '<tr>';
-					// username
-					$o .= '<td>' . $user->username() . '</td>';
+		// 		$o .= '<tr>';
+		// 			// username
+		// 			$o .= '<td>' . $user->username() . '</td>';
 
-					// username
-					$o .= HTML::input([
-						"type" => "hidden",
-						"name" => "ma_username_" . $name,
-						"value" => $user->username()
-					]);
+		// 			// username
+		// 			$o .= HTML::input([
+		// 				"type" => "hidden",
+		// 				"name" => "ma_username_" . $name,
+		// 				"value" => $user->username()
+		// 			]);
 
-					// full name
-					$o .= '<td>';
-						$o .= HTML::input(["type"=>"text", "name"=> "ma_fullname_" . $name, "value"=> $user->fullname()]) . '</td>';
+		// 			// full name
+		// 			$o .= '<td>';
+		// 				$o .= HTML::input(["type"=>"text", "name"=> "ma_fullname_" . $name, "value"=> $user->fullname()]) . '</td>';
 
-					// email
-					$o .= '<td>';
-						$o .= HTML::input(["type"=>"text", "name"=> "ma_email_" . $name, "value"=> $user->email()]) . '</td>';
+		// 			// email
+		// 			$o .= '<td>';
+		// 				$o .= HTML::input(["type"=>"text", "name"=> "ma_email_" . $name, "value"=> $user->email()]) . '</td>';
 
-					// groups
-					$o .= '<td>';
-						$o .= HTML::p(["type" => "text", "name" => "ma_groups_" . $name, "content" => implode(",", Groups::get_groups_of_user($user->username()))]);
-					$o .= '</td>';
+		// 			// groups
+		// 			$o .= '<td>';
+		// 				$o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+		// 			$o .= '</td>';
 
-					// groups
-					$o .= '<td>';
-						$o .= HTML::input(["type" => "text", "name" => "ma_id_" . $name, "value" => $user->id()]);
-					$o .= '</td>';
+		// 			// groups
+		// 			$o .= '<td>';
+		// 				$o .= HTML::input(["type" => "text", "name" => "ma_id_" . $name, "value" => $user->id()]);
+		// 			$o .= '</td>';
 
-					// status
-					$o .= '<td>';
-						$o .= HTML::input(["type" => "text", "name" => "ma_status_" . $name, "value" => $user->status()]);
-						// $o .= View::status($user->status());
-					$o .= '</td>';
+		// 			// status
+		// 			$o .= '<td>';
+		// 				$o .= HTML::input(["type" => "text", "name" => "ma_status_" . $name, "value" => $user->status()]);
+		// 				// $o .= View::status($user->status());
+		// 			$o .= '</td>';
 
-					// action
-					$o .= '<td>';
-						$o .= HTML::a([
-							"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
-							"class" => "delete",
-							"content" => "del"
-						]);
-					$o .= '</td>';
-				$o .= '</tr>';
+		// 			// action
+		// 			$o .= '<td>';
+		// 				$o .= HTML::a([
+		// 					"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
+		// 					"class" => "delete",
+		// 					"content" => "del"
+		// 				]);
+		// 			$o .= '</td>';
+		// 		$o .= '</tr>';
 
 
-				// add hidden parameters
-				// created
-				$o .= HTML::input([
-					"type" => "hidden",
-					"name" => "ma_created_" . $name,
-					"value" => $user->created()
+		// 		// add hidden parameters
+		// 		// created
+		// 		$o .= HTML::input([
+		// 			"type" => "hidden",
+		// 			"name" => "ma_created_" . $name,
+		// 			"value" => $user->created()
+		// 		]);
+
+		// 		// hash
+		// 		$o .= HTML::input([
+		// 			"type" => "hidden",
+		// 			"name" => "ma_hash_" . $name,
+		// 			"value" => $user->hash()
+		// 		]);
+
+		// 	}
+
+		// 	$o .= '</table>';
+
+		// 	$o .= HTML::input([
+		// 		"type" => "submit",
+		// 		"value" => "Speichern"
+		// 	]);
+
+		// 	$o .= HTML::input([
+		// 		"type" => "hidden",
+		// 		"name" => "action",
+		// 		"value" => "ma_save_users"
+		// 	]);
+
+
+		// $o .= '</form>';
+
+		$idx = 0;
+
+		foreach ($users as $user) {
+
+			// username
+			$o .= '<hr><h4>' . $user->username() . '</h4>';
+
+			// full name
+			$o .= '<p>';
+				$o .= HTML::input(["type"=>"text", "idx"=> "ma_fullidx_" . $idx, "value"=> $user->fullname()]) . '</p>';
+
+			// email
+			$o .= '<p>';
+				$o .= HTML::input(["type"=>"text", "idx"=> "ma_email_" . $idx, "value"=> $user->email()]) . '</p>';
+
+			// groups
+			$o .= '<p>';
+				$o .= HTML::input(["type" => "text", "idx" => "ma_groups_" . $idx, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+			$o .= '</p>';
+
+			// groups
+			$o .= '<p>';
+				$o .= HTML::input(["type" => "text", "idx" => "ma_id_" . $idx, "value" => $user->id()]);
+			$o .= '</p>';
+
+			// status
+			$o .= '<p>';
+				$o .= HTML::input(["type" => "text", "idx" => "ma_status_" . $idx, "value" => $user->status()]);
+				// $o .= View::status($user->status());
+			$o .= '</p>';
+
+			// action
+			$o .= '<p>';
+				$o .= HTML::a([
+					"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
+					"class" => "delete",
+					"content" => "del"
 				]);
+			$o .= '</p>';
 
-				// hash
-				$o .= HTML::input([
-					"type" => "hidden",
-					"name" => "ma_hash_" . $name,
-					"value" => $user->hash()
-				]);
 
-			}
-
-			$o .= '</table>';
-
-			$o .= HTML::input([
-				"type" => "submit",
-				"value" => "Speichern"
-			]);
-
+			// add hidden parameters
+			// created
 			$o .= HTML::input([
 				"type" => "hidden",
-				"name" => "action",
-				"value" => "ma_save_users"
+				"idx" => "ma_created_" . $idx,
+				"value" => $user->created()
 			]);
 
+			// hash
+			$o .= HTML::input([
+				"type" => "hidden",
+				"idx" => "ma_hash_" . $idx,
+				"value" => $user->hash()
+			]);
 
-		$o .= '</form>';
+			$idx++;
+		}
+
 
 
 

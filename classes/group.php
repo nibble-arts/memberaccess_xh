@@ -40,7 +40,7 @@ class Group {
 
 			// split users
 			if (isset($this->data["users"])) {
-				$this->data["users"] = $this->split_users($data["users"]);
+				$this->data["users"] = array_filter($this->split_users($data["users"]));
 			}
 		}
 
@@ -77,7 +77,10 @@ class Group {
 
 	// add user
 	public function add_user($user) {
-		array_push($this->data["users"], $user);
+
+		if (!in_array($user, $this->data["users"])) {
+			array_push($this->data["users"], $user);
+		}
 	}
 
 
@@ -86,6 +89,8 @@ class Group {
 
 		if (($key = array_search($user, $this->data["users"])) !== false) {
 			unset($this->data["users"][$key]);
+
+			$this->data["users"] = array_filter($this->data["users"]);
 		}
 	}
 
