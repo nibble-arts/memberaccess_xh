@@ -82,7 +82,7 @@ class Pages {
 			foreach (self::$restricted as $idx => $page) {
 
 				// check group rights, logged and admin
-				if (Access::user() && !(Groups::user_is_in_group(Access::user()->username(), $page["groups"]) && Access::logged()) && !Access::admin()) {
+				if (Access::user() && !(Groups::user_is_in_group(Access::user()->username(), $page["groups"]) && Access::logged()) && !Access::admin() || !Access::user()) {
 
 					// hide page and remove restricted entry
 					self::$c[$page ["id"]] = '#CMSimple hide#';
