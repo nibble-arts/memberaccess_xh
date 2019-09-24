@@ -78,7 +78,6 @@ class Access {
 				self::set_user($user_data);
 				self::$logged = true;
 			}
-
 		}
 
 
