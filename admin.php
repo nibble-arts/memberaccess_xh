@@ -39,7 +39,7 @@ if (function_exists('memberaccess')
 
 	    case '':
 	        $o .= '<h1>Member Access</h1>';
-    		$o .= '<p>Version 0.9</p>';
+    		$o .= '<p>Version 1.0.3</p>';
             $o .= '<p>Copyright 2019</p>';
     		$o .= '<p><a href="http://www.nibble-arts.org" target="_blank">Thomas Winkler</a></p>';
             $o .= '<p>Das Plugin ermöglicht es Seiten zu verstecken und nur nach Login freizugeben. die Benutzer können Gruppen zugeordnet werden, die den Zugriff auf die geschützten Seiten definierten.</p>';
