@@ -7,19 +7,21 @@
  * Manages member logins and hides pages by group
  */
 
+// plugin base path
+define('MA_PLUGIN_BASE', $pth['folder']['plugin']);
+
 
 // init class autoloader
 spl_autoload_register(function ($path) {
 
 	if ($path && strpos($path, "ma\\") !== false) {
-		$path = "classes/" . str_replace("ma\\", "", strtolower($path)) . ".php";
+		$path = MA_PLUGIN_BASE . "classes/" . str_replace("ma\\", "", strtolower($path)) . ".php";
+
 		include_once $path; 
 	}
 });
 
 
-// plugin base path
-define('MA_PLUGIN_BASE', $pth['folder']['plugin']);
 
 
 // init access class
