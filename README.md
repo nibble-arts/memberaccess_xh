@@ -41,3 +41,9 @@ administration
 The member administration. The administration can be used on the frontend using the admin group on a special page.
 
 under developement
+
+ToDos
+-----
+
+* Check the auto-remove function of unconfirmed registrations
+* Adding and removing of groups an the administration page
