@@ -3,6 +3,8 @@ Memberaccess
 
 The CMSimple_XH plugin is designed to grant page access depending on defined group rights. The registration is automatically done by the user adding a defined default group. The profile is locked until a confirmation link is called, which is automatically sent to the given email. After a definable timeout, unconfirmed profiles are automatically removed. When logged in, the user can edit his name and email. The profile data with the password hash is stored in a text file, as well as the group affiliation.
 
+The user and group data is stored in the content area of CMSimple, with a secure hash for the password. A backup of the CMSimple content directory stores the member data automatically.
+
 Plugin use
 ==========
 
