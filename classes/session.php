@@ -96,6 +96,12 @@ class Session {
 	}
 
 
+	// get parameter keys
+	public static function get_param_keys() {
+		return array_keys(self::$params);
+	}
+
+
 	// get cookie
 	public static function cookie($name) {
 		
@@ -134,7 +140,7 @@ class Session {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "http: " . print_r(self::$params, true) . "<br>";
 		$o .= "session: " . print_r(self::$session, true) . "<br>";

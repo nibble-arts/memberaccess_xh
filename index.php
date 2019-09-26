@@ -7,19 +7,18 @@
  * Manages member logins and hides pages by group
  */
 
-// Todo use autoloader
-if (!class_exists('ma\Access')) require "classes/access.php";
-if (!class_exists('ma\Session')) require "classes/session.php";
-if (!class_exists('ma\File')) require "classes/file.php";
-if (!class_exists('ma\View')) require "classes/view.php";
-if (!class_exists('ma\Pages')) require "classes/pages.php";
-if (!class_exists('ma\HTML')) require "classes/html.php";
-if (!class_exists('ma\Groups')) require "classes/groups.php";
-if (!class_exists('ma\Hash')) require "classes/hash.php";
-if (!class_exists('ma\Data')) require "classes/data.php";
-if (!class_exists('ma\Mail')) require "classes/mail.php";
+
+// init class autoloader
+spl_autoload_register(function ($path) {
+
+	if ($path && strpos($path, "ma\\") !== false) {
+		$path = "classes/" . str_replace("ma\\", "", strtolower($path)) . ".php";
+		include_once $path; 
+	}
+});
 
 
+// plugin base path
 define('MA_PLUGIN_BASE', $pth['folder']['plugin']);
 
 
@@ -70,7 +69,7 @@ function memberaccess($function) {
 
 		case "profile":
 			if (ma\Access::logged()) {
-				$o .= ma\View::profile("update", ["username" => "disabled", "fullname" => "text", "email" => "text", "password_new" => "password", "password_check" => "password"]);
+				$o .= ma\View::profile("update", ["username" => "disabled", "fullname" => "text", "email" => "text", "password_change" => "password", "password_check" => "password"]);
 			}
 			break;
 

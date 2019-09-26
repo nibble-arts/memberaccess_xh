@@ -13,9 +13,8 @@ function ma_tab($page) {
 	// return script include
 	$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/access_tab.js"></script>';
 
-
 	// add to onload
-	$onload .= "access_init();";
+	$onload .= "ma_access_init();";
 				
 	$o .= '<p><b>Access Control</b></p>';
 	$o .= '<form action="' . $sn . '?' . $su . '" method="post" id="memberaccess" name="memberaccess">';

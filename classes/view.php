@@ -46,7 +46,7 @@ class View {
 		$o = '<form method="post" action="' . CMSIMPLE_URL.'?'.Pages::current() . '">';
 			$o .= '<div class="ma_login_block">';
 				
-				if ($error_code = Access::failure()) {
+				if ($error_code = Message::failure()) {
 					$o .= '<div class="xh_warning">';
 						$o .= self::text($error_code);
 					$o .= '</div>';
@@ -111,17 +111,14 @@ class View {
 
 		$o = '<div class="ma_unlogged_block">';
 
-			// $o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/unlock.png">';
-
+			// $o .= View::text("logging_as") . " ";
 			$o .= $name;
-
 
 			// if logout on restricted page, use logout_page parameter for new page
 			// or allways use logout page is true
 			if (Pages::is_restricted(Pages::current()) || Access::config("logout_allways_use_link")) {
 				$logout_page = Access::config("logout_page");
 			}
-
 
 
 			// profile
@@ -132,7 +129,7 @@ class View {
 
 			// logout
 			$o .= ' <a href="' . CMSIMPLE_URL.'?'. $logout_page . '&action=ma_logout">';
-				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png">';
+				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png" title="Profil">';
 			// $o .= self::text ("logging_logout");
 			$o .= '</a>';
 		$o .= '</div>';
@@ -147,7 +144,7 @@ class View {
 		$o = "";
 
 
-		if ($error_code = Access::failure()) {
+		if ($error_code = Message::failure()) {
 			$o .= '<div class="xh_warning">';
 				$o .= self::text($error_code);
 			$o .= '</div>';
@@ -155,7 +152,7 @@ class View {
 
 
 		// save success info
-		elseif (Access::success()) {
+		elseif (Message::success()) {
 			$o .= '<div class="xh_info">';
 				$o .= self::text("email_sent");
 			$o .= '</div>';
@@ -219,6 +216,7 @@ class View {
 
 		$o .= '<ul>';
 		
+		$pages = self::sort_array_by_key($pages, "name");
 
 		// list restricted pages
 		foreach ($pages as $page) {
@@ -235,6 +233,21 @@ class View {
 	}
 
 
+
+	private static function sort_array_by_key($array, $key) {
+
+		$sorted = [];
+
+		foreach ($array as $page) {
+			$sorted[$page[$key]] = $page;
+		}
+
+		asort($sorted);
+
+		return $sorted;
+	}
+
+
 	// show profile
 	public static function profile($function, $display_fields = false) {
 
@@ -245,7 +258,6 @@ class View {
 
 		$o = "";
 		$user = Access::user();
-
 
 		// on register use profile as target page
 		if ($function == "register") {
@@ -262,14 +274,14 @@ class View {
 
 
 			// save success info
-			if (Access::success()) {
+			if (Message::success()) {
 				$o .= '<div class="xh_info">';
 					$o .= self::text("profile_saved");
 				$o .= '</div>';
 			}
 
 
-			elseif ($error_code = Access::failure()) {
+			elseif ($error_code = Message::failure()) {
 				$o .= '<div class="xh_warning">';
 					$o .= self::text($error_code);
 				$o .= '</div>';
@@ -292,8 +304,8 @@ class View {
 				// draw formular
 				$o .= '</p>';
 
+					// show label
 					$o .= HTML::div(["content" => View::text($idx), "class" => "ma_label"]);
-
 
 					// edit -> username can't be changed
 					if ($type == "disabled") {
@@ -361,56 +373,269 @@ class View {
 
 	// member administration
 	public static function administration () {
-		
-		$o = "";
 
-		$users = Access::users();
+		global $onload;
+		
+		$o = "<h2>User Administration</h2>";
+
+		// return script include
+		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
+
+		// add to onload
+		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+
+		$users = Users::get_users();
 		asort($users);
 
-		$o .= '<form method="post" action="' . '">';
+		if ($error_code = Message::failure()) {
+			$o .= '<div class="xh_warning">';
+				$o .= self::text($error_code);
+			$o .= '</div>';
+		}
+
+		$o .= '<form method="post" name="ma_admin_users" action="' . CMSIMPLE_URL.'?'.Pages::current() .'">';
+
+			$o .= HTML::input([
+				"type" => "submit",
+				"value" => "Speichern"
+			]);
 
 			$o .= '<table>';
 
 			$o .= '<th>Username</th>';
 			$o .= '<th>Full name</th>';
-			$o .= '<th>email</th>';
-			$o .= '<th>groups</th>';
+			$o .= '<th>Email</th>';
+			$o .= '<th>Groups</th>';
+			$o .= '<th>ID</th>';
 			$o .= '<th>Status</th>';
+			$o .= '<th>Aktion</th>';
+
+			$idx = 0;
 
 			foreach ($users as $user) {
 
+				$name = $idx++;
+
 				$o .= '<tr>';
+					// username
 					$o .= '<td>' . $user->username() . '</td>';
-					$o .= '<td>' . $user->fullname() . '</td>';
+
+					// username
+					$o .= HTML::input([
+						"type" => "hidden",
+						"name" => "ma_username_" . $name,
+						"value" => $user->username()
+					]);
+
+					// full name
 					$o .= '<td>';
-						$o .= HTML::a(["content" => $user->email(), "href" => "mailto:" . $user->email()]);
-					$o .= '</td>';
+						$o .= HTML::input(["type"=>"text", "name"=> "ma_fullname_" . $name, "value"=> $user->fullname()]) . '</td>';
+
+					// email
 					$o .= '<td>';
-						if ($user->groups()) {
-							$o .= HTML::input(["type" => "text", "name" => "ma_".$user->username(), "value" => $user->groups()->list(",")]);
-						}
+						$o .= HTML::input(["type"=>"text", "name"=> "ma_email_" . $name, "value"=> $user->email()]) . '</td>';
+
+					// groups
+					$o .= '<td>';
+						$o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
 					$o .= '</td>';
-					$o .= '<td>' . View::status($user->status()) . '</td>';
+
+					// groups
+					$o .= '<td>';
+						$o .= HTML::input(["type" => "text", "name" => "ma_id_" . $name, "value" => $user->id()]);
+					$o .= '</td>';
+
+					// status
+					$o .= '<td>';
+						$o .= HTML::input(["type" => "text", "name" => "ma_status_" . $name, "value" => $user->status()]);
+						// $o .= View::status($user->status());
+					$o .= '</td>';
+
+					// action
+					$o .= '<td>';
+						$o .= HTML::a([
+							"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
+							"class" => "delete",
+							"content" => "del"
+						]);
+					$o .= '</td>';
 				$o .= '</tr>';
+
+
+				// add hidden parameters
+				// created
+				$o .= HTML::input([
+					"type" => "hidden",
+					"name" => "ma_created_" . $name,
+					"value" => $user->created()
+				]);
+
+				// hash
+				$o .= HTML::input([
+					"type" => "hidden",
+					"name" => "ma_hash_" . $name,
+					"value" => $user->hash()
+				]);
+
 			}
 
 			$o .= '</table>';
 
-		$o .= HTML::input([
-			"type" => "submit",
-			"value" => "Speichern"
-		]);
+			$o .= HTML::input([
+				"type" => "submit",
+				"value" => "Speichern"
+			]);
 
-		$o .= HTML::input([
-			"type" => "hidden",
-			"value" => "ma_save_members"
-		]);
+			$o .= HTML::input([
+				"type" => "hidden",
+				"name" => "action",
+				"value" => "ma_save_users"
+			]);
+
 
 		$o .= '</form>';
+
+		// $idx = 0;
+
+		// foreach ($users as $user) {
+
+		// 	// username
+		// 	$o .= '<hr><h4>' . $user->username() . '</h4>';
+
+		// 	// full name
+		// 	$o .= '<p>';
+		// 		$o .= HTML::input(["type"=>"text", "idx"=> "ma_fullidx_" . $idx, "value"=> $user->fullname()]) . '</p>';
+
+		// 	// email
+		// 	$o .= '<p>';
+		// 		$o .= HTML::input(["type"=>"text", "idx"=> "ma_email_" . $idx, "value"=> $user->email()]) . '</p>';
+
+		// 	// groups
+		// 	$o .= '<p>';
+		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_groups_" . $idx, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+		// 	$o .= '</p>';
+
+		// 	// groups
+		// 	$o .= '<p>';
+		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_id_" . $idx, "value" => $user->id()]);
+		// 	$o .= '</p>';
+
+		// 	// status
+		// 	$o .= '<p>';
+		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_status_" . $idx, "value" => $user->status()]);
+		// 		// $o .= View::status($user->status());
+		// 	$o .= '</p>';
+
+		// 	// action
+		// 	$o .= '<p>';
+		// 		$o .= HTML::a([
+		// 			"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
+		// 			"class" => "delete",
+		// 			"content" => "del"
+		// 		]);
+		// 	$o .= '</p>';
+
+
+		// 	// add hidden parameters
+		// 	// created
+		// 	$o .= HTML::input([
+		// 		"type" => "hidden",
+		// 		"idx" => "ma_created_" . $idx,
+		// 		"value" => $user->created()
+		// 	]);
+
+		// 	// hash
+		// 	$o .= HTML::input([
+		// 		"type" => "hidden",
+		// 		"idx" => "ma_hash_" . $idx,
+		// 		"value" => $user->hash()
+		// 	]);
+
+		// 	$idx++;
+		// }
+
+
+
+
+		//=================================================
+		// administrate groups
+
+		$groups = Groups::get_groups();
+		asort($groups);
+
+		$o .= "<h2>Gruppen Administration</h2>";
+
+
+
+		$idx = 0;
+
+		foreach ($groups as $group) {
+
+			$o .= '<form method="post" name="ma_admin_groups" action="' . CMSIMPLE_URL . '?' . Pages::current() .'">';
+
+				$user_list = [];
+				$name = $idx++;
+
+				// group name
+				$o .= '<hr><h4>' . $group->group() . '</h4>';
+
+				// users in group
+				$user_list = self::create_user_list($group);
+				$o .= '<p>' . implode(", ", $user_list) . '</p>';
+
+				// create list of unused users
+				$new_user_list = array_diff(Users::get_user_names(), $group->users());
+
+				// add user selector
+				$o .= HTML::select($new_user_list, [
+					"name" => "user"
+				]);
+
+				$o .= " " . HTML::input([
+					"type" => "submit",
+					"name" => "ma_add_user",
+					"value" => View::text("user_add")
+				]);
+
+				// hidden data
+				$o .= " " . HTML::input([
+					"type" => "hidden",
+					"name" => "group",
+					"value" => $group->group()
+				]);
+
+				$o .= " " . HTML::input([
+					"type" => "hidden",
+					"name" => "action",
+					"value" => "ma_add_user_to_group"
+				]);
+
+			$o .= '</form>';
+
+		}
+
 
 		return $o;
 	}
 	
+
+	private static function create_user_list($group) {
+
+		$user_list = [];
+
+		// users
+		foreach ($group->users() as $user) {
+
+			$user_list[] = HTML::a([
+				"content" => $user,
+				"href" => CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_remove_user_from_group&group=' . $group->group() . '&user=' . $user,
+				"title" => View::text("group_remove_user")
+			]);
+		}
+
+		return $user_list;
+	}
+
 
 	// return timestamp as human readable time
 	public static function htime($timestamp) {
@@ -458,7 +683,7 @@ class View {
 
 	// ======================================================
 	// global views
-	// show login/logout on all pages
+	// display login/logout on all pages
 	public static function display_all_pages(&$c) {
 
 
@@ -470,7 +695,7 @@ class View {
 				// hide on login page
 				if (!Pages::current(Access::config("login_page"))) {
 
-					// show logout
+					// disply logout
 					if (Access::logged()) {
 					    $c[$i] = View::logged(Access::user("fullname")) . $page;
 					}
@@ -484,7 +709,7 @@ class View {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "text: " . print_r(self::$text, true);
 

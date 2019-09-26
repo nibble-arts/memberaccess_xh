@@ -7,12 +7,8 @@ class Access {
 	private static $config;
 	
 	private static $path = false;
-	private static $users;
-	private static $group;
 	
 	private static $logged = false;
-	private static $failure = false;
-	private static $success = false;
 
 	private static $user;
 
@@ -23,6 +19,9 @@ class Access {
 	
 	private static $admin = false;
 	
+
+
+	// NEW
 
 	// ================================================
 	// pattern for the user data format
@@ -52,14 +51,11 @@ class Access {
 
 		self::$config = $config["memberaccess"];
 
-		// load session data
 		Session::load();
-
-		// init view
 		View::init($text);
 
-		// load users
-		self::load(self::config("basepath"));
+		Users::load(self::config("basepath") . "memberaccess/users.txt");
+		Groups::load(self::config("basepath") . "memberaccess/group.txt");
 
 	}
 
@@ -72,16 +68,12 @@ class Access {
 
 		self::reset();
 
-
-//TODO change ma_logged to session parameter
-
-
 		// user ist logged
 		if (($user = Session::session("ma_user")) && Session::session("ma_logged")) {
 
-			$user_data = Access::users($user, true);
+			$user_data = USERS::get_user($user);
 
-			// is valid user
+			// save valid user
 			if ($user_data) {
 				self::set_user($user_data);
 				self::$logged = true;
@@ -98,8 +90,7 @@ class Access {
 				// login user
 					if (($user = Session::get("ma_user")) && ($password = Session::get("ma_password"))) {
 
-						$user_data = Access::users($user, true);
-
+						$user_data = Users::get_user($user);
 						// user found
 						if ($user_data) {
 
@@ -110,19 +101,16 @@ class Access {
 							// check for corret data
 							if (Hash::verify($password, $hash)) {
 
-								self::$failure = false;
-								self::$logged = true;
+								Message::reset();
 
-								// set cookies
-								// Session::set_cookie("ma_user", $user);
-								// Session::set_cookie("ma_logged", true);
+								self::$logged = true;
 
 								Session::set_session("ma_user", $user);
 								Session::set_session("ma_logged", true);
 
 								self::set_user($user_data);
 
-								self::$success = "logged";
+								Message::success("logged");
 
 								// reload session
 								// Session::load();
@@ -130,28 +118,24 @@ class Access {
 
 							// password incorrect
 							else {
-								self::$failure = "user_pass_failure";
+								Message::failure("user_pass_failure");
 							}
 						}
 
 						// username incorrect
 						else {
-							self::$failure = "user_pass_failure";
+							Message::failure("user_pass_failure");
 						}
 					}
 
 					else {
-						self::$failure = "user_pass_missing";
+						Message::failure("user_pass_missing");
 					}
 				break;
 			
 
-				// logout user
+			// logout user
 			case "ma_logout":
-
-				// remove cookies
-				// Session::set_cookie("ma_logged", '');
-				// Session::set_cookie("ma_user", '');
 
 				self::reset();
 
@@ -159,15 +143,13 @@ class Access {
 				Session::remove("ma_logged");
 				Session::remove("ma_user");
 
-
 				break;
 			
 
 			case "ma_get_password":
 
-
 				// check user
-				$user = Access::users(Session::param("ma_username"), true);
+				$user = Users::get_user(Session::param("ma_username"));
 
 				// user exists
 				if ($user) {
@@ -179,14 +161,10 @@ class Access {
 						$pwd = bin2hex(openssl_random_pseudo_bytes(6));
 
 						// set password
-						$update = new Data();
-						$update->add([
-							"hash" => Hash::create($pwd)
-						]);
+						$update = ["hash" => Hash::create($pwd)];
 
 						// save new password
-						self::update_user($user->get("username"), $update);
-
+						Users::update_user($user->get("username"), $update);
 
 						// send mail
 						$result = Mail::send([
@@ -195,22 +173,24 @@ class Access {
 							"message" => View::text("logging_forgotten_mail_message") . "\n\n" . $pwd
 						]);
 
+
+						// create messages
 						if ($result === false) {
-							self::$success = true;
+							Message::success(true);
 						}
 
 						else {
-							self::$failure = $result;
+							Message::failure($result);
 						}
 					}
 
 					else {
-						self::$failure = "profile_not_found";
+						Message::failure("profile_not_found");
 					}
 				}
 
 				else {
-					self::$failure = "profile_not_found";
+					Message::failure("profile_not_found");
 				}
 
 				break;
@@ -218,28 +198,23 @@ class Access {
 
 			case "ma_save_user":
 
-				$user_data = new Data(self::$users_pattern);
-
+				$user_data = new User(self::$users_pattern);
 
 				// password change -> check
-				if (Session::get("ma_password_new") != Session::get("ma_password_check")) {
-
-					Access::$failure = "password_check_failure";
+				if (Session::get("ma_password_new") != Session::get("ma_password_check") && Session::get("ma_password_change") != Session::get("ma_password_check")) {
+					Message::failure("password_check_failure");
 				}
-
 
 
 				// add new user
 				else {
 
-
 					// register -> user already exists
 					if (Session::get("function") == "register") {
 
 						// user name already exists
-						if (Access::get_user(Session::get("ma_username"))) {
-
-							self::$failure = "user_exists";
+						if (Users::get_user(Session::get("ma_username"))) {
+							Message::failure("user_exists");
 						}
 
 
@@ -247,25 +222,24 @@ class Access {
 						// add user
 						else {
 
-
 							// username dont exists
 							if (($username = Session::get("ma_username")) == "") {
-								self::$failure = "no_username";
+								Message::failure("no_username");
 							}
 
 							// fullname dont exists
-							elseif (($username = Session::get("ma_username")) == "") {
-								self::$failure = "no_fullname";
+							elseif (($username = Session::get("ma_fullname")) == "") {
+								Message::failure("no_fullname");
 							}
 
 							// password dont exists
 							elseif (($username = Session::get("ma_password_new")) == "") {
-								self::$failure = "no_password";
+								Message::failure("no_password");
 							}
 
 							// email dont exists
 							elseif (($username = Session::get("ma_email")) == "") {
-								self::$failure = "no_email";
+								Message::failure("no_email");
 							}
 
 
@@ -274,7 +248,7 @@ class Access {
 
 								$uuid = uniqid();
 
-								$user_data->add([
+								$user_data->set([
 									"hash" => Hash::create($hash),
 									"username" => Session::get("ma_username"),
 									"fullname" => Session::get("ma_fullname"),
@@ -283,22 +257,23 @@ class Access {
 								]);
 
 								// add user to userfile
-								self::add_user(Session::get("ma_username"), $user_data);
+								Users::add_user(Session::get("ma_username"), $user_data);
 
 								// self::load(self::config("basepath"));
 								self::$logged = true;
-								self::$success = true;
+								Message::success(true);
 
 
 								// send confirmation mail
 								$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::get("ma_username") . "&ma_uuid=" . $uuid;
 
 
-								self::$failure = Mail::send([
+								Message::failure(Mail::send([
 									"to" => $user_data->get("email"),
 									"subject" => View::text("confirm_subject"),
 									"message" => View::text("confirm_message") . "\n\n" . $link
-								]);
+								]));
+
 							}
 						}
 					}
@@ -309,32 +284,55 @@ class Access {
 					// update user
 					else {
 
-
 						// set new password hash
 						if (Session::get("ma_password_new") != "") {
-
-							self::$user->add("hash", Hash::create(Session::get("ma_password_new")));
+							self::$user->set("hash", Hash::create(Session::get("ma_password_new")));
 						}
 
+						// set new password hash
+						if (Session::get("ma_password_change") != "") {
+							self::$user->set("hash", Hash::create(Session::get("ma_password_change")));
+						}
 
 						// collect data
 						foreach (self::$users_pattern as $key) {
 
 							if (($value = Session::param("ma_" . $key)) !== false) {
-
-								self::$user->add($key, $value);
+								self::$user->set($key, $value);
 							}
 						}
 
-
 						// save user and update access user
-						self::update_user(Access::user("username"), self::$user);
-						self::$success = true;
+						Users::update_user(Access::user("username"), self::$user);
+						Message::success(true);
 					}
 				}
 
 
 
+				break;
+
+
+			case "ma_del_user":
+
+				Users::remove_user(Session::param("user"));
+				Groups::remove_user_from_groups(Session::param("user"));
+
+				break;
+
+
+			case "ma_remove_user_from_group":
+
+				Groups::remove_user_from_group(Session::param("user"), Session::param("group"));
+				Groups::save();
+
+				break;
+
+
+			case "ma_add_user_to_group":
+
+				Groups::add_user_to_group(Session::param("user"), Session::param("group"));
+				Groups::save();
 				break;
 
 
@@ -343,21 +341,87 @@ class Access {
 				if (($uuid = Session::param("ma_uuid")) && Session::param("ma_username")) {
 
 
-					$user = Access::users(Session::param("ma_username"), true);
+					$user = Users::get_user(Session::param("ma_username"));
 
 					// check for user uuid
 					if ($user && $user->get("id") == $uuid) {
 
-						$update = new Data();
-						$update->add(["id" => "", "status" => "-1"]);
+						$user->set("id", "");
+						$user->set("status", -1);
 
-						self::update_user($user->get("username"), $update);
+						Users::update_user($user->get("username"), $user);
+					}
+
+					else {
+						Message::failure("confirm_expired");
 					}
 				}
 
 				break;
-		}
 
+
+			case "ma_save_users":
+
+				$user_ary = [];
+				$group_ary = [];
+
+				Users::reset();
+
+				// create users list from http parameters
+				foreach (Session::get_param_keys() as $param) {
+
+					$p_ary = explode("_", $param);
+
+					// check for x_y_z... count
+					if (count($p_ary) > 2) {
+
+						if (array_shift($p_ary) == "ma") {
+
+							$key = array_shift($p_ary);
+							// $username = implode("_", $p_ary);
+							$idx = $p_ary[0];
+
+							// save groups
+							if ($key == "groups") {
+
+								$group_ary[$idx] = Session::param($param);
+
+								// remove user from groups
+								// Groups::remove_user_from_groups($username);
+
+								// add user to new groups
+								// Groups::add_user_to_group($username, Session::param($param));
+
+								// save groups
+								// Groups::save();
+							}
+
+							// save user data
+							else {
+
+								if (!isset($user_ary[$idx])) {
+									$user_ary[$idx] = [];
+								}
+
+								$user_ary[$idx][$key] = Session::param($param);
+							}
+						}
+					}
+				}
+
+				// add changed users
+				foreach ($user_ary as $idx => $user) {
+					Users::add_user($user["username"], $user, false);
+					Groups::remove_user_from_groups($user["username"]);
+					Groups::add_user_to_group($user["username"], $group_ary[$idx]);
+				}
+
+				// save users
+				Users::save();
+				Groups::save();
+
+				break;
+		}
 
 		return $o;
 	}
@@ -371,24 +435,20 @@ class Access {
 		self::$user = false;
 		self::$admin = false;
 
-		self::$success = false;
-		self::$failure = false;
+		Message::reset();
 	}	
 	
 
-	// set user data
+	// set current user data
 	private static function set_user($user_object) {
 
+		// set current user
 		self::$user = $user_object;
-		self::$user->add("groups", self::user_groups(self::$user->username()));
-
 
 		// check if user is admin
-		if (self::$user->groups()->group_exists(self::config ("group_admin"))) {
-			
+		if (Groups::user_is_in_group($user_object->username(), "admin")) {
 			self::$admin = true;
 		}
-
 	}
 
 
@@ -396,183 +456,15 @@ class Access {
 /* ****************************
  * load and save user and group data
 */
-
-	// load users and groups
-	public static function load ($filepath) {
-
-		// path for files
-		self::$path =  './' . $filepath . "memberaccess/";
-
-		self::$users = self::parse(File::read(self::$path . "users.txt"), self::$users_pattern);
-
-		self::$group = self::parse(File::read(self::$path . "group.txt"), self::$group_pattern);
-	}
-	
-	
 	// save users and groups of loaded
 	public static function save () {
 
-		// access is loaded
-		if (self::$path) {
-
-			self::$failure = File::write(self::$path . "users.txt", self::serialize(self::$users));
-
-			self::$failure = File::write(self::$path . "group.txt", self::serialize(self::$group));
-		}
+		Users::save();
+		Groups::save();
 
 	}
 	
 	
-	// parse string by pattern to array
-	private static function parse($data, $pattern) {
-		
-		$ret = [];
-		$lines = explode ("\n", $data);
-
-		// iterate lines
-		foreach ($lines as $line) {
-			
-			// live not empty
-			if (strlen($line) > 0) {
-				
-				$line_array = [];
-				$parts = explode (":", $line);
-				
-				// set key/val pairs
-				foreach ($pattern as $key) {
-					
-					$val = array_shift($parts);
-					$line_array[$key] = trim($val);
-				}
-
-				// use first pattern value as key
-				$key = $line_array[array_keys($line_array)[0]];
-			}
-
-			$ret[$key] = new Data($pattern);
-			$ret[$key]->add($line_array);
-		}
-
-		return $ret;
-	}
-
-
-	// serialist data array to string
-	private static function serialize ($data) {
-		
-		$temp = [];
-
-		foreach ($data as $entry) {
-			$temp[] = $entry->serialize();
-		}
-
-		return implode ("", $temp);
-	}
-
-
-/* ****************************
- * maipulate user
-*/
-
-	// add user
-	// false if already exists or not loaded
-	public static function add_user($user, $data) {
-
-		$time = time();
-
-		$data->add("created", $time);
-		$data->add("modified", $time);
-		$data->add("status", $time);
-
-		return self::add(self::$users, $user, $data, self::$users_pattern);
-	}
-	
-
-	// remove user
-	public static function remove_user ($user) {
-		return self::remove(self::$users, $user);
-	}
-	
-
-	// update user
-	public static function update_user ($user, $data) {
-		
-		$data->add("modified", time());
-
-		return self::update(self::$users, $user, $data, self::$users_pattern);
-	}
-	
-
-
-/* ****************************
- * maipulate group
-*/
-
-	// user is in group
-	// return group object
-	public static function user_groups($user) {
-
-		$groups = [];
-
-		foreach (self::$group as $name => $group) {
-
-			if (strpos($group->users(), $user) !== false) {
-
-				$groups[$name] = "";
-			}
-		}
-
-		return new Groups($groups);
-	}
-
-
-	// add group
-	// false if already exists or not loaded
-	public static function add_group ($group, $data) {
-		return self::add(self::$group, $group, $data, self::$group_pattern);
-	}
-	
-
-	// remove group
-	public static function remove_group($group) {
-		return self::remove(self::$group, $group);
-	}
-	
-
-	// add user to group
-	public static function add_user_to_group($user, $group) {
-		
-		$users = explode (",", self::group($group, true)["users"]);
-		
-		// don't exist -> add
-		if (!in_array($user, $users)) {
-			$users[] = $user;
-		}
-		
-		self::update_group($group, ["users" => implode (",", array_filter($users))]);
-	}
-	
-
-	// remove it from group
-	public static function remove_user_from_group($user, $group) {
-		
-		$users = explode (",", self::group($group, true)["users"]);
-		
-		// exist -> remove
-		if (($idx = array_search($user, $users)) !== false) {
-			unset($users[$idx]);
-		}
-		
-		self::update_group($group, ["users" => implode (",", array_filter($users))]);
-	}
-	
-
-	// update group
-	private static function update_group ($group, $data) {
-		return self::update(self::$group, $group, $data, self::$group_pattern);
-	}
-	
-
 /* ****************************
  * global maipulation
 */
@@ -688,16 +580,6 @@ class Access {
 	}
 
 	
-	// check for failure
-	public static function failure() {
-		return self::$failure;
-	}
-	
-	// check for success
-	public static function success() {
-		return self::$success;
-	}
-
 	// check for logged user
 	public static function logged() {
 
@@ -725,13 +607,13 @@ class Access {
 				if ((time() - $status) > self::config("register_timeout")) {
 
 					// remove user
-					self::remove_user(self::$user["username"]);
+					Users::remove_user(self::$user["username"]);
 
 					return false;
 				}
 
 				// 
-				self::$failure = "confirm_not";
+				Message::failure("confirm_not");
 
 				return false;
 			}
@@ -744,18 +626,6 @@ class Access {
 		return self::$admin;
 	}
 
-	
-// get user data by username
-	public static function get_user ($user) {
-
-		if (isset(self::$users[$user])) {
-			return self::$users[$user];
-		}
-		else {
-			return false;
-		}
-	}
-	
 	
 	// get group array
 	public static function group($name = false, $flag = false) {
@@ -775,25 +645,6 @@ class Access {
 	}
 	
 
-	// get user array
-	public static function users ($name = false, $flag = false) {
-		
-		if ($name && isset(self::$users[$name])) {
-
-			return self::$users[$name];
-		}
-
-// flag is false -> return all groups
-		elseif (!$flag) {
-			return self::$users;
-		}
-		else {
-			return false;
-		}
-	}
-
-
-
 	// get config parameter
 	public static function config($name = false) {
 
@@ -811,11 +662,11 @@ class Access {
 	}
 
 
-	public static function show() {
+	public static function debug() {
 
 		$o = "user: " . print_r(self::$user) . "<br>";
-		$o .= "info: " . self::$success . "<br>";
-		$o .= "failure: " . self::$failure;
+		$o .= "info: " . Message::success() . "<br>";
+		$o .= "failure: " . Message::failure();
 
 		return $o;
 	}
