@@ -216,6 +216,7 @@ class View {
 
 		$o .= '<ul>';
 		
+		$pages = self::sort_array_by_key($pages, "name");
 
 		// list restricted pages
 		foreach ($pages as $page) {
@@ -229,6 +230,21 @@ class View {
 
 		return $o;
 
+	}
+
+
+
+	private static function sort_array_by_key($array, $key) {
+
+		$sorted = [];
+
+		foreach ($array as $page) {
+			$sorted[$page[$key]] = $page;
+		}
+
+		asort($sorted);
+
+		return $sorted;
 	}
 
 
