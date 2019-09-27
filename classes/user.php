@@ -15,7 +15,6 @@ class User {
 
 			// convert pattern to keys
 			$data = array_combine($data,array_fill(0, count($data), ""));
-
 			$this->set($data);
 		}
 	}

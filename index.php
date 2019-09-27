@@ -40,7 +40,7 @@ ma\View::display_all_pages($c);
 
 // ================================
 // main plugin function call
-function memberaccess($function) {
+function memberaccess($function = "") {
 
 	$o = "";
 

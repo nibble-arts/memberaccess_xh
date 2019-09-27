@@ -560,23 +560,15 @@ class Access {
 	// if key, return key value
 	public static function user($key = false) {
 
-		// return only if logged
-		// if (self::logged()) {
-			// return value of user
-			if ($key) {
-				return self::$user->get($key);
-			}
+		// return value of user
+		if ($key) {
+			return self::$user->get($key);
+		}
 
-			// return user object
-			else {
-				return self::$user;
-			}
-
-		// }
-
-		// else {
-		// 	return false;
-		// }
+		// return user object
+		else {
+			return self::$user;
+		}
 	}
 
 	
