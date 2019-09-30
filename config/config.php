@@ -2,6 +2,7 @@
 
 $plugin_cf['memberaccess']['basepath']="content/plugins/";
 $plugin_cf['memberaccess']['logpath']="content/plugins/";
+$plugin_cf['memberaccess']['backup_cnt']=4;
 
 $plugin_cf['memberaccess']['login_autologin']="";
 $plugin_cf['memberaccess']['login_page']="Mitgliederbereich";

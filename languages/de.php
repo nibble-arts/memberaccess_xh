@@ -19,7 +19,7 @@ $plugin_tx['memberaccess']['confirm_mail_send_error']="Fehler beim Versandt der 
 $plugin_tx['memberaccess']['confirm_subject']="VÖFA Konto bestätigen";
 $plugin_tx['memberaccess']['confirm_message']="Zur Bestätigung Ihres VÖFA-Mitgliederkontos rufen Sie bitte den unten angegebenen Aktivierungslink auf.";
 $plugin_tx['memberaccess']['confirm_expired']="Die Kontobestätigung ist abgelaufen.";
-$plugin_tx['memberaccess']['delete_confirm']="Wollen Sie den Benutzer wirklich löschen?";
+$plugin_tx['memberaccess']['delete_confirm']="Wollen Sie die Daten wirklich löschen?";
 
 $plugin_tx['memberaccess']['user_exists']="Der Benutzername existiert schon";
 $plugin_tx['memberaccess']['logging_login']="Anmelden";

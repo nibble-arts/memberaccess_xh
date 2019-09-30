@@ -1,6 +1,6 @@
 function ma_admin_init(text) {
 
-	// add delete window
+	// add user delete window
 	jQuery(".delete").click(function (e) {
 
 		e.preventDefault();
