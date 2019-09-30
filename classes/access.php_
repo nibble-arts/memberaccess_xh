@@ -51,8 +51,6 @@ class Access {
 
 		self::$config = $config["memberaccess"];
 
-		Log::init(self::config("logpath") . "memberaccess/log.txt");
-
 		Session::load();
 		View::init($text);
 
@@ -114,23 +112,19 @@ class Access {
 
 								Message::success("logged");
 
-								Log::add("user ".$user." logged in");
-
+								// reload session
+								// Session::load();
 							}
 
 							// password incorrect
 							else {
 								Message::failure("user_pass_failure");
-
-								Log::add("login: username or password incorrect from user ".$user);
 							}
 						}
 
 						// username incorrect
 						else {
 							Message::failure("user_pass_failure");
-
-							Log::add("username or password incorrect from user ".$user." at login");
 						}
 					}
 
@@ -142,10 +136,6 @@ class Access {
 
 			// logout user
 			case "ma_logout":
-
-				if (Access::user()) {
-					Log::add("user ".Access::user()->username()." logged out");
-				}
 
 				self::reset();
 
@@ -187,7 +177,6 @@ class Access {
 						// create messages
 						if ($result === false) {
 							Message::success(true);
-							Log::add("user ".$user->username()." requested new password");
 						}
 
 						else {
@@ -285,8 +274,6 @@ class Access {
 									"message" => View::text("confirm_message") . "\n\n" . $link
 								]));
 
-								Log::add("registration of user ".Session::get("ma_username"));
-
 							}
 						}
 					}
@@ -305,8 +292,6 @@ class Access {
 						// set new password hash
 						if (Session::get("ma_password_change") != "") {
 							self::$user->set("hash", Hash::create(Session::get("ma_password_change")));
-
-							Log::add("user ".self::$user->username()." changed password");
 						}
 
 						// collect data
@@ -330,8 +315,6 @@ class Access {
 
 			case "ma_del_user":
 
-				Log::add("user ".Session::param("user")." removed");
-
 				Users::remove_user(Session::param("user"));
 				Groups::remove_user_from_groups(Session::param("user"));
 
@@ -340,8 +323,6 @@ class Access {
 
 			case "ma_remove_user_from_group":
 
-				Log::add("user ".Session::param("user")." removed from group ".Session::param("group"));
-
 				Groups::remove_user_from_group(Session::param("user"), Session::param("group"));
 				Groups::save();
 
@@ -349,8 +330,6 @@ class Access {
 
 
 			case "ma_add_user_to_group":
-
-				Log::add("user ".Session::param("user")." added to group ".Session::param("group"));
 
 				Groups::add_user_to_group(Session::param("user"), Session::param("group"));
 				Groups::save();
@@ -371,8 +350,6 @@ class Access {
 						$user->set("status", -1);
 
 						Users::update_user($user->get("username"), $user);
-
-						Log::add("profile from user ".$user->username()." confirmed");
 					}
 
 					else {
@@ -629,9 +606,8 @@ class Access {
 				// timeout -> remove user
 				if ((time() - $status) > self::config("register_timeout")) {
 
-// ToDo check autoremove of user
 					// remove user
-					// Users::remove_user(self::$user["username"]);
+					Users::remove_user(self::$user["username"]);
 
 					return false;
 				}
