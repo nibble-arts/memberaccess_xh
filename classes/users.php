@@ -54,7 +54,7 @@ class Users {
 					$key = $line_array[array_keys($line_array)[0]];
 				}
 
-				self::add_user($key, $line_array);
+				self::add_user($key, $line_array, false);
 			}
 		}
 	}
@@ -112,6 +112,7 @@ class Users {
 
 		if (self::user_exists($user)) {
 
+			Log::add("user ".$user." removed");
 			unset(self::$users[$user]);
 		}
 

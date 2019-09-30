@@ -19,14 +19,18 @@ class File {
 	public static function write ($path, $data) {
 
 		$ret = false;
-		$ret = file_put_contents($path, $data);
+	
+		if ($data != "") {
 
-		if ($ret === false) {
-			Message::failure("file_write_error");
-			return true;
+			$ret = file_put_contents($path, $data);
+
+			if ($ret === false) {
+				Message::failure("file_write_error");
+			}
+
 		}
 
-		return false;
+		return $ret;
 	}
 }
 

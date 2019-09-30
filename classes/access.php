@@ -269,7 +269,8 @@ class Access {
 
 								// add user to userfile
 								Users::add_user(Session::get("ma_username"), $user_data);
-
+								Log::add("user ".Session::get("ma_username")." added");
+								
 								// self::load(self::config("basepath"));
 								self::$logged = true;
 								Message::success(true);
@@ -330,8 +331,6 @@ class Access {
 
 			case "ma_del_user":
 
-				Log::add("user ".Session::param("user")." removed");
-
 				Users::remove_user(Session::param("user"));
 				Groups::remove_user_from_groups(Session::param("user"));
 
@@ -340,20 +339,19 @@ class Access {
 
 			case "ma_remove_user_from_group":
 
-				Log::add("user ".Session::param("user")." removed from group ".Session::param("group"));
-
 				Groups::remove_user_from_group(Session::param("user"), Session::param("group"));
 				Groups::save();
 
+				Log::add("user ".Session::param("user")." removed from group ".Session::param("group"));
 				break;
 
 
 			case "ma_add_user_to_group":
 
-				Log::add("user ".Session::param("user")." added to group ".Session::param("group"));
-
 				Groups::add_user_to_group(Session::param("user"), Session::param("group"));
 				Groups::save();
+
+				Log::add("user ".Session::param("user")." added to group ".Session::param("group"));
 				break;
 
 

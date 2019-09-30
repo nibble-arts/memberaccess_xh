@@ -45,7 +45,7 @@ class Groups {
 					$key = $line_array[array_keys($line_array)[0]];
 				}
 
-				self::add_group($key, $line_array);
+				self::add_group($key, $line_array, false);
 			}
 		}
 	}
@@ -106,9 +106,9 @@ class Groups {
 	}
 
 
-	public static function remove_user_from_group($user, $group) {
+	public static function remove_user_from_group($user, $groupName) {
 
-		if ($group = self::group_exists($group)) {
+		if ($group = self::group_exists($groupName)) {
 			$group->remove_user($user);
 		}
 	}

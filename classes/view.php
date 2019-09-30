@@ -495,67 +495,6 @@ class View {
 
 		$o .= '</form>';
 
-		// $idx = 0;
-
-		// foreach ($users as $user) {
-
-		// 	// username
-		// 	$o .= '<hr><h4>' . $user->username() . '</h4>';
-
-		// 	// full name
-		// 	$o .= '<p>';
-		// 		$o .= HTML::input(["type"=>"text", "idx"=> "ma_fullidx_" . $idx, "value"=> $user->fullname()]) . '</p>';
-
-		// 	// email
-		// 	$o .= '<p>';
-		// 		$o .= HTML::input(["type"=>"text", "idx"=> "ma_email_" . $idx, "value"=> $user->email()]) . '</p>';
-
-		// 	// groups
-		// 	$o .= '<p>';
-		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_groups_" . $idx, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
-		// 	$o .= '</p>';
-
-		// 	// groups
-		// 	$o .= '<p>';
-		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_id_" . $idx, "value" => $user->id()]);
-		// 	$o .= '</p>';
-
-		// 	// status
-		// 	$o .= '<p>';
-		// 		$o .= HTML::input(["type" => "text", "idx" => "ma_status_" . $idx, "value" => $user->status()]);
-		// 		// $o .= View::status($user->status());
-		// 	$o .= '</p>';
-
-		// 	// action
-		// 	$o .= '<p>';
-		// 		$o .= HTML::a([
-		// 			"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
-		// 			"class" => "delete",
-		// 			"content" => "del"
-		// 		]);
-		// 	$o .= '</p>';
-
-
-		// 	// add hidden parameters
-		// 	// created
-		// 	$o .= HTML::input([
-		// 		"type" => "hidden",
-		// 		"idx" => "ma_created_" . $idx,
-		// 		"value" => $user->created()
-		// 	]);
-
-		// 	// hash
-		// 	$o .= HTML::input([
-		// 		"type" => "hidden",
-		// 		"idx" => "ma_hash_" . $idx,
-		// 		"value" => $user->hash()
-		// 	]);
-
-		// 	$idx++;
-		// }
-
-
-
 
 		//=================================================
 		// administrate groups
@@ -613,6 +552,12 @@ class View {
 			$o .= '</form>';
 
 		}
+
+
+		//=================================================
+		// show logfile
+		$o .= "<h2>Logfile</h2>";
+		$o .= "<p>".str_replace("\n", "<br>", Log::get())."</p>";
 
 
 		return $o;
