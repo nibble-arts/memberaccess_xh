@@ -52,6 +52,12 @@ class View {
 					$o .= '</div>';
 				}
 
+				if ($error_code = Message::success()) {
+					$o .= '<div class="xh_info">';
+						$o .= self::text($error_code);
+					$o .= '</div>';
+				}
+
 				// login icon
 				$o .= '<div class="ma_value">';
 					$o .= '<img class="ma_big_icon" src="' . MA_PLUGIN_BASE . 'images/lock.png">';
