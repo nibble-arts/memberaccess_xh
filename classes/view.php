@@ -443,7 +443,9 @@ class View {
 
 					// groups
 					$o .= '<td>';
-						$o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+						// $o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+
+						$o .= '<span class="ma_groups_list">' . implode(", ", Groups::get_groups_of_user($user->username())) . '</span>';
 					$o .= '</td>';
 
 					// groups
