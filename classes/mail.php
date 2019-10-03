@@ -19,7 +19,7 @@ class Mail {
 
 			// mail sent
 			if ($result) {
-				$failure = false;
+				$failure = true;
 			}
 
 			// mail error

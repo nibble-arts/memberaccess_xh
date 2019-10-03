@@ -273,24 +273,20 @@ class Access {
 
 
 								// mail versand
-								if (Mail::send([
+								Mail::send([
 									"to" => $user_data->get("email"),
 									"subject" => View::text("confirm_subject"),
 									"message" => View::text("confirm_message") . "\n\n" . $link
-								])) {
-									Message::success("confirm_register");
+								]);
+								
+								Message::success("confirm_register");
 
-									// add user to userfile
-									Users::add_user(Session::get("ma_username"), $user_data);
-									Log::add("user ".Session::get("ma_username")." added");
+								// add user to userfile
+								Users::add_user(Session::get("ma_username"), $user_data);
+								Log::add("user ".Session::get("ma_username")." added");
 									
 									// self::load(self::config("basepath"));
 									// self::$logged = true;
-								}
-
-								else {
-									Message::failure("email_sent_failure");
-								}
 
 								Log::add("registration of user ".Session::get("ma_username"));
 
