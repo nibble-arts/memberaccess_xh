@@ -60,8 +60,6 @@ class File {
 				}
 			}
 		}
-
-// debug($i." ".$cnt);
 	}
 }
 
