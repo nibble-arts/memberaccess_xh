@@ -88,9 +88,9 @@ class View {
 				// login button
 				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
-					// $o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
-					// $o .= self::text("logging_forgotten");
-					// $o .= '</a>';
+					$o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
+					$o .= self::text("logging_forgotten");
+					$o .= '</a>';
 				$o .= '</div></p>';
 				
 				// register link
