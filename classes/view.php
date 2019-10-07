@@ -86,20 +86,20 @@ class View {
 				$o .= '</div>';
 	
 				// login button
-				$o .= '<div class="ma_value">';
+				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
-					$o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
-					$o .= self::text("logging_forgotten");
-					$o .= '</a>';
-				$o .= '</div>';
+					// $o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
+					// $o .= self::text("logging_forgotten");
+					// $o .= '</a>';
+				$o .= '</div></p>';
 				
 				// register link
-				$o .= '<div class="ma_value">';
+				$o .= '<p><div class="ma_value">';
 					$o .= ' <a class="ma_button" href="?' . Access::config("login_register") . '&action=ma_register">';
 					$o .= self::text ("logging_register");
 					$o .= '</a>';
 				$o .= '</div>';
-			$o .= '</div>';
+			$o .= '</div></p>';
 			
 			$o .= '<input type="hidden" name="action" value="ma_login">';
 		$o .= '</form>';
