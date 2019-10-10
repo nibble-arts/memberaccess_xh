@@ -52,6 +52,12 @@ class View {
 					$o .= '</div>';
 				}
 
+				if ($error_code = Message::success()) {
+					$o .= '<div class="xh_info">';
+						$o .= self::text($error_code);
+					$o .= '</div>';
+				}
+
 				// login icon
 				$o .= '<div class="ma_value">';
 					$o .= '<img class="ma_big_icon" src="' . MA_PLUGIN_BASE . 'images/lock.png">';
@@ -80,20 +86,20 @@ class View {
 				$o .= '</div>';
 	
 				// login button
-				$o .= '<div class="ma_value">';
+				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
 					$o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
 					$o .= self::text("logging_forgotten");
 					$o .= '</a>';
-				$o .= '</div>';
+				$o .= '</div></p>';
 				
 				// register link
-				$o .= '<div class="ma_value">';
+				$o .= '<p><div class="ma_value">';
 					$o .= ' <a class="ma_button" href="?' . Access::config("login_register") . '&action=ma_register">';
 					$o .= self::text ("logging_register");
 					$o .= '</a>';
 				$o .= '</div>';
-			$o .= '</div>';
+			$o .= '</div></p>';
 			
 			$o .= '<input type="hidden" name="action" value="ma_login">';
 		$o .= '</form>';
@@ -440,7 +446,9 @@ class View {
 
 					// groups
 					$o .= '<td>';
-						$o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+						// $o .= HTML::input(["type" => "text", "name" => "ma_groups_" . $name, "value" => implode(",", Groups::get_groups_of_user($user->username()))]);
+
+						$o .= '<span class="ma_groups_list">' . implode(", ", Groups::get_groups_of_user($user->username())) . '</span>';
 					$o .= '</td>';
 
 					// groups

@@ -112,7 +112,7 @@ class Access {
 
 								self::set_user($user_data);
 
-								Message::success("logged");
+								// Message::success("logged");
 
 								Log::add("user ".$user." logged in");
 
@@ -267,24 +267,26 @@ class Access {
 									"id" => $uuid
 								]);
 
-								// add user to userfile
-								Users::add_user(Session::get("ma_username"), $user_data);
-								Log::add("user ".Session::get("ma_username")." added");
-								
-								// self::load(self::config("basepath"));
-								self::$logged = true;
-								Message::success(true);
-
 
 								// send confirmation mail
 								$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::get("ma_username") . "&ma_uuid=" . $uuid;
 
 
-								Message::failure(Mail::send([
+								// mail versand
+								Mail::send([
 									"to" => $user_data->get("email"),
 									"subject" => View::text("confirm_subject"),
 									"message" => View::text("confirm_message") . "\n\n" . $link
-								]));
+								]);
+								
+								Message::success("confirm_register");
+
+								// add user to userfile
+								Users::add_user(Session::get("ma_username"), $user_data);
+								Log::add("user ".Session::get("ma_username")." added");
+									
+									// self::load(self::config("basepath"));
+									// self::$logged = true;
 
 								Log::add("registration of user ".Session::get("ma_username"));
 
