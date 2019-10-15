@@ -8,6 +8,8 @@ namespace ma;
 
 class Session {
 	
+	private static $get;
+	private static $post;
 	private static $params;		// http values
 	private static $cookies;	// cookie values
 	private static $session;	// session values
@@ -23,6 +25,8 @@ class Session {
 		
 		self::start();
 
+		self::$get = $_GET;
+		self::$post = $_POST;
 		self::$params = $_REQUEST;
 		self::$cookies = $_COOKIE;
 		self::$session = $_SESSION;
@@ -34,20 +38,20 @@ class Session {
 	
 	// get session value
 	// http before session before cookie
-	public static function get ($name) {
+	// public static function get ($name) {
 
-		// get http param
-		if (!$val = self::param($name)) {
+	// 	// get http param
+	// 	if (!$val = self::param($name)) {
 		
-			if (!$val = self::session($name)) {
+	// 		if (!$val = self::session($name)) {
 
-				// not present, try cookie
-				$val = self::cookie($name);
-			}
-		}
+	// 			// not present, try cookie
+	// 			$val = self::cookie($name);
+	// 		}
+	// 	}
 
-		return $val;
-	}
+	// 	return $val;
+	// }
 	
 
 	// set session and cookie value
@@ -84,7 +88,31 @@ class Session {
 	}
 
 
-	// get parameter
+	// get GET parameter
+	public static function get($name) {
+		
+		if (isset(self::$get[$name])) {
+			return self::$get[$name];
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
+	// get POST parameter
+	public static function post($name) {
+		
+		if (isset(self::$post[$name])) {
+			return self::$post[$name];
+		}
+		else {
+			return false;
+		}
+	}
+	
+	
+	// get GET and POSt parameter
 	public static function param($name) {
 		
 		if (isset(self::$params[$name])) {
