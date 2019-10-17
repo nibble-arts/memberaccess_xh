@@ -90,7 +90,7 @@ class Access {
 			case "ma_login":
 
 				// login user
-					if (($user = Session::get("ma_user")) && ($password = Session::get("ma_password"))) {
+					if (($user = Session::param("ma_user")) && ($password = Session::param("ma_password"))) {
 
 						$user_data = Users::get_user($user);
 						// user found
@@ -212,7 +212,7 @@ class Access {
 				$user_data = new User(self::$users_pattern);
 
 				// password change -> check
-				if (Session::get("ma_password_new") != Session::get("ma_password_check") && Session::get("ma_password_change") != Session::get("ma_password_check")) {
+				if (Session::param("ma_password_new") != Session::param("ma_password_check") && Session::param("ma_password_change") != Session::param("ma_password_check")) {
 					Message::failure("password_check_failure");
 				}
 
@@ -221,10 +221,10 @@ class Access {
 				else {
 
 					// register -> user already exists
-					if (Session::get("function") == "register") {
+					if (Session::param("function") == "register") {
 
 						// user name already exists
-						if (Users::get_user(Session::get("ma_username"))) {
+						if (Users::get_user(Session::param("ma_username"))) {
 							Message::failure("user_exists");
 						}
 
@@ -234,42 +234,42 @@ class Access {
 						else {
 
 							// username dont exists
-							if (($username = Session::get("ma_username")) == "") {
+							if (($username = Session::param("ma_username")) == "") {
 								Message::failure("no_username");
 							}
 
 							// fullname dont exists
-							elseif (($username = Session::get("ma_fullname")) == "") {
+							elseif (($username = Session::param("ma_fullname")) == "") {
 								Message::failure("no_fullname");
 							}
 
 							// password dont exists
-							elseif (($username = Session::get("ma_password_new")) == "") {
+							elseif (($username = Session::param("ma_password_new")) == "") {
 								Message::failure("no_password");
 							}
 
 							// email dont exists
-							elseif (($username = Session::get("ma_email")) == "") {
+							elseif (($username = Session::param("ma_email")) == "") {
 								Message::failure("no_email");
 							}
 
 
 							// password check ok
-							elseif (($hash = Session::get("ma_password_new")) && Session::get("ma_password_check")) {
+							elseif (($hash = Session::param("ma_password_new")) && Session::param("ma_password_check")) {
 
 								$uuid = uniqid();
 
 								$user_data->set([
 									"hash" => Hash::create($hash),
-									"username" => Session::get("ma_username"),
-									"fullname" => Session::get("ma_fullname"),
-									"email" => Session::get("ma_email"),
+									"username" => Session::param("ma_username"),
+									"fullname" => Session::param("ma_fullname"),
+									"email" => Session::param("ma_email"),
 									"id" => $uuid
 								]);
 
 
 								// send confirmation mail
-								$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::get("ma_username") . "&ma_uuid=" . $uuid;
+								$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::param("ma_username") . "&ma_uuid=" . $uuid;
 
 
 								// mail versand
@@ -282,13 +282,13 @@ class Access {
 								Message::success("confirm_register");
 
 								// add user to userfile
-								Users::add_user(Session::get("ma_username"), $user_data);
-								Log::add("user ".Session::get("ma_username")." added");
+								Users::add_user(Session::param("ma_username"), $user_data);
+								Log::add("user ".Session::param("ma_username")." added");
 									
 									// self::load(self::config("basepath"));
 									// self::$logged = true;
 
-								Log::add("registration of user ".Session::get("ma_username"));
+								Log::add("registration of user ".Session::param("ma_username"));
 
 							}
 						}
@@ -301,13 +301,13 @@ class Access {
 					else {
 
 						// set new password hash
-						if (Session::get("ma_password_new") != "") {
-							self::$user->set("hash", Hash::create(Session::get("ma_password_new")));
+						if (Session::param("ma_password_new") != "") {
+							self::$user->set("hash", Hash::create(Session::param("ma_password_new")));
 						}
 
 						// set new password hash
-						if (Session::get("ma_password_change") != "") {
-							self::$user->set("hash", Hash::create(Session::get("ma_password_change")));
+						if (Session::param("ma_password_change") != "") {
+							self::$user->set("hash", Hash::create(Session::param("ma_password_change")));
 
 							Log::add("user ".self::$user->username()." changed password");
 						}
@@ -396,7 +396,7 @@ class Access {
 				Users::reset();
 
 				// create users list from http parameters
-				foreach (Session::get_param_keys() as $param) {
+				foreach (Session::param_param_keys() as $param) {
 
 					$p_ary = explode("_", $param);
 
