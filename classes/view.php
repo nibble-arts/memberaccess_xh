@@ -138,7 +138,10 @@ class View {
 				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png" title="Profil">';
 			// $o .= self::text ("logging_logout");
 			$o .= '</a>';
+
 		$o .= '</div>';
+
+		$o .= '<div style="clear:both; margin-bottom:10px;"></div>';
 		
 		return $o;
 	}
