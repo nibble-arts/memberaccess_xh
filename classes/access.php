@@ -396,7 +396,7 @@ class Access {
 				Users::reset();
 
 				// create users list from http parameters
-				foreach (Session::param_param_keys() as $param) {
+				foreach (Session::get_param_keys() as $param) {
 
 					$p_ary = explode("_", $param);
 
@@ -440,8 +440,11 @@ class Access {
 				// add changed users
 				foreach ($user_ary as $idx => $user) {
 					Users::add_user($user["username"], $user, false);
-					Groups::remove_user_from_groups($user["username"]);
-					Groups::add_user_to_group($user["username"], $group_ary[$idx]);
+
+					if (isset($group_ary[$idx])) {
+						Groups::remove_user_from_groups($user["username"]);
+						Groups::add_user_to_group($user["username"], $group_ary[$idx]);
+					}
 				}
 
 				// save users
