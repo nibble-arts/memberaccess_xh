@@ -466,7 +466,7 @@ class View {
 					$o .= '<td>';
 						$o .= HTML::a([
 							"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
-							"class" => "delete",
+							"class" => "ma_delete",
 							"content" => "del"
 						]);
 					$o .= '</td>';
@@ -570,7 +570,7 @@ class View {
 		$o .= "<h2>Logfile</h2>";
 		$o .= "<p>".str_replace("\n", "<br>", Log::get())."</p>";
 
-		$o .= '<p><a class="delete" href="' . CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_clear_log">Clear Log</a></p>';
+		$o .= '<p><a class="ma_delete" href="' . CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_clear_log">Clear Log</a></p>';
 
 		return $o;
 	}
@@ -585,7 +585,7 @@ class View {
 
 			$user_list[] = HTML::a([
 				"content" => $user,
-				"class" => "delete",
+				"class" => "ma_delete",
 				"href" => CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_remove_user_from_group&group=' . $group->group() . '&user=' . $user,
 				"title" => View::text("group_remove_user")
 			]);
