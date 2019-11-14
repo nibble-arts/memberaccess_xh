@@ -31,7 +31,7 @@ class View {
 	// link to login page
 	public static function login_link() {
 
-		$o = '<a class="ma_login_link" href="' . CMSIMPLE_URL . '?' . Config::login_page() . '">';
+		$o = '<a class="ma_login_link" href="' . CMSIMPLE_URL . '?' . Access::config("login_page") . '">';
 		$o .= self::text("logging_login");
 		$o .= '</a>';
 
@@ -88,14 +88,14 @@ class View {
 				// login button
 				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
-					$o .= ' <a class="ma_button" href="?' . Config::login_forgotten() . '&action=ma_forgotten">';
+					$o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
 					$o .= self::text("logging_forgotten");
 					$o .= '</a>';
 				$o .= '</div></p>';
 				
 				// register link
 				$o .= '<p><div class="ma_value">';
-					$o .= ' <a class="ma_button" href="?' . Config::login_register() . '&action=ma_register">';
+					$o .= ' <a class="ma_button" href="?' . Access::config("login_register") . '&action=ma_register">';
 					$o .= self::text ("logging_register");
 					$o .= '</a>';
 				$o .= '</div>';
@@ -117,18 +117,18 @@ class View {
 
 		$o = '<div class="ma_unlogged_block">';
 
-			// $o .= Text::logging_as() . " ";
+			// $o .= View::text("logging_as") . " ";
 			$o .= $name;
 
 			// if logout on restricted page, use logout_page parameter for new page
 			// or allways use logout page is true
-			if (Pages::is_restricted(Pages::current()) || Config::logout_allways_use_link()) {
-				$logout_page = Config::logout_page();
+			if (Pages::is_restricted(Pages::current()) || Access::config("logout_allways_use_link")) {
+				$logout_page = Access::config("logout_page");
 			}
 
 
 			// profile
-			$o .= ' <a href="' . CMSIMPLE_URL.'?'. Config::profile_page() . '&action=ma_profile">';
+			$o .= ' <a href="' . CMSIMPLE_URL.'?'. Access::config("profile_page") . '&action=ma_profile">';
 				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/profile.png">';
 			$o .= '</a>';
 
@@ -138,10 +138,7 @@ class View {
 				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png" title="Profil">';
 			// $o .= self::text ("logging_logout");
 			$o .= '</a>';
-
 		$o .= '</div>';
-
-		$o .= '<div style="clear:both; margin-bottom:10px;"></div>';
 		
 		return $o;
 	}
@@ -152,18 +149,10 @@ class View {
 
 		$o = "";
 
-
-		if ($error_code = Message::failure()) {
-			$o .= '<div class="xh_warning">';
-				$o .= self::text($error_code);
-			$o .= '</div>';
-		}
-
-
-		// save success info
-		elseif (Message::success()) {
+		
+		if ($success = Message::success()) {
 			$o .= '<div class="xh_info">';
-				$o .= self::text("email_sent");
+				$o .= self::text($success);
 			$o .= '</div>';
 		}
 
@@ -171,12 +160,19 @@ class View {
 		// no success info, show form
 		else {
 
+			// save success info
+			if ($failure = Message::failure()) {
+				$o .= '<div class="xh_info">';
+					$o .= self::text($failure);
+				$o .= '</div>';
+			}
+
 			$o .= '<form method="post" action="' . CMSIMPLE_URL.'?'. Pages::current() . '">';
 
-				$o .= HTML::div(["content" => Text::logging_forgotten_text(), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => View::text("logging_forgotten_text"), "class" => "ma_label"]);
 
 
-				$o .= HTML::div(["content" => Text::username(), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => View::text("username"), "class" => "ma_label"]);
 
 				$o .= HTML::input([
 					"type" => "input",
@@ -185,7 +181,7 @@ class View {
 				]);
 
 
-				$o .= HTML::div(["content" => Text::email(), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => View::text("email"), "class" => "ma_label"]);
 
 				$o .= HTML::input([
 					"type" => "input",
@@ -197,7 +193,7 @@ class View {
 
 					$o .= HTML::input([
 						"type" => "submit",
-						"value" => Text::logging_request()
+						"value" => View::text("logging_request")
 					]);
 
 				$o .= '</p>';
@@ -270,7 +266,7 @@ class View {
 
 		// on register use profile as target page
 		if ($function == "register") {
-			$target_page = Config::login_page();
+			$target_page = Access::config("login_page");
 		}
 
 		// use current page as target
@@ -314,7 +310,7 @@ class View {
 				$o .= '</p>';
 
 					// show label
-					$o .= HTML::div(["content" => Text::get($idx), "class" => "ma_label"]);
+					$o .= HTML::div(["content" => View::text($idx), "class" => "ma_label"]);
 
 					// edit -> username can't be changed
 					if ($type == "disabled") {
@@ -391,7 +387,7 @@ class View {
 		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
 
 		// add to onload
-		$onload .= "ma_admin_init('" . Text::delete_confirm() . "');";
+		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
 
 		$users = Users::get_users();
 		asort($users);
@@ -466,7 +462,7 @@ class View {
 					$o .= '<td>';
 						$o .= HTML::a([
 							"href" => "?" . Pages::$su . "&action=ma_del_user&user=" . $user->username(),
-							"class" => "ma_delete",
+							"class" => "delete",
 							"content" => "del"
 						]);
 					$o .= '</td>';
@@ -544,7 +540,7 @@ class View {
 				$o .= " " . HTML::input([
 					"type" => "submit",
 					"name" => "ma_add_user",
-					"value" => Text::user_add()
+					"value" => View::text("user_add")
 				]);
 
 				// hidden data
@@ -570,7 +566,7 @@ class View {
 		$o .= "<h2>Logfile</h2>";
 		$o .= "<p>".str_replace("\n", "<br>", Log::get())."</p>";
 
-		$o .= '<p><a class="ma_delete" href="' . CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_clear_log">Clear Log</a></p>';
+		$o .= '<p><a class="delete" href="' . CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_clear_log">Clear Log</a></p>';
 
 		return $o;
 	}
@@ -585,9 +581,9 @@ class View {
 
 			$user_list[] = HTML::a([
 				"content" => $user,
-				"class" => "ma_delete",
+				"class" => "delete",
 				"href" => CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_remove_user_from_group&group=' . $group->group() . '&user=' . $user,
-				"title" => Text::group_remove_user()
+				"title" => View::text("group_remove_user")
 			]);
 		}
 
@@ -645,13 +641,13 @@ class View {
 	public static function display_all_pages(&$c) {
 
 
-		if (Config::display_all_pages() && (!Session::$adm || (Session::$adm && !Session::$edit))) {
+		if (Access::config("display_all_pages") && (!Session::$adm || (Session::$adm && !Session::$edit))) {
 
 			// add at all pages
 			foreach ($c as $i=>$page) {
 
 				// hide on login page
-				if (!Pages::current(Config::login_page())) {
+				if (!Pages::current(Access::config("login_page"))) {
 
 					// disply logout
 					if (Access::logged()) {

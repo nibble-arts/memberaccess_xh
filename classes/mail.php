@@ -17,16 +17,6 @@ class Mail {
 			// send mail
 			$result = mail($mail["to"], $subject, $mail["message"], $header);
 
-			// mail sent
-			if ($result) {
-				$failure = true;
-			}
-
-			// mail error
-			else {
-				$failure = "confirm_mail_send_error";
-			}
-
 			return $failure;
 		}
 	}

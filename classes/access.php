@@ -4,6 +4,8 @@ namespace ma;
 
 class Access {
 	
+	private static $config;
+	
 	private static $path = false;
 	
 	private static $logged = false;
@@ -47,13 +49,15 @@ class Access {
 	// initialise access class
 	public static function init ($config, $text) {
 
-		Log::init(Config::logpath() . "memberaccess/log.txt");
+		self::$config = $config["memberaccess"];
+
+		Log::init(self::config("logpath") . "memberaccess/log.txt");
 
 		Session::load();
 		View::init($text);
 
-		Users::load(Config::basepath() . "memberaccess/users.txt");
-		Groups::load(Config::basepath() . "memberaccess/group.txt");
+		Users::load(self::config("basepath") . "memberaccess/users.txt");
+		Groups::load(self::config("basepath") . "memberaccess/group.txt");
 
 	}
 
@@ -162,7 +166,6 @@ class Access {
 
 					if(Session::param("ma_username") == $user->get("username") && ($email = Session::param("ma_email")) == $user->email()) {
 
-
 						// create random password
 						$pwd = bin2hex(openssl_random_pseudo_bytes(6));
 
@@ -175,19 +178,19 @@ class Access {
 						// send mail
 						$result = Mail::send([
 							"to" => $email,
-							"subject" => Text::logging_forgotten_mail_subject(),
-							"message" => Text::logging_forgotten_mail_message() . "\n\n" . $pwd
+							"subject" => View::text("logging_forgotten_mail_subject"),
+							"message" => View::text("logging_forgotten_mail_message") . "\n\n" . $pwd
 						]);
 
 
 						// create messages
-						if ($result === false) {
-							Message::success(true);
+						if ($result !== false) {
 							Log::add("user ".$user->username()." requested new password");
+							Message::success("forgotten_mail_send");
 						}
 
 						else {
-							Message::failure($result);
+							Message::failure("confirm_mail_send_error");
 						}
 					}
 
@@ -271,8 +274,8 @@ class Access {
 								// mail versand
 								Mail::send([
 									"to" => $user_data->get("email"),
-									"subject" => Text::confirm_subject(),
-									"message" => Text::confirm_message() . "\n\n" . $link
+									"subject" => View::text("confirm_subject"),
+									"message" => View::text("confirm_message") . "\n\n" . $link
 								]);
 								
 								Message::success("confirm_register");
@@ -281,7 +284,7 @@ class Access {
 								Users::add_user(Session::param("ma_username"), $user_data);
 								Log::add("user ".Session::param("ma_username")." added");
 									
-									// self::load(Config::basepath());
+									// self::load(self::config("basepath"));
 									// self::$logged = true;
 
 								Log::add("registration of user ".Session::param("ma_username"));
@@ -631,7 +634,7 @@ class Access {
 			else {
 				
 				// timeout -> remove user
-				if ((time() - $status) > Config::register_timeout()) {
+				if ((time() - $status) > self::config("register_timeout")) {
 
 // ToDo check autoremove of user
 					// remove user
@@ -674,20 +677,20 @@ class Access {
 	
 
 	// get config parameter
-	// public static function config($name = false) {
+	public static function config($name = false) {
 
-	// 	if (isset(self::$config[$name])) {
-	// 		return self::$config[$name];
-	// 	}
+		if (isset(self::$config[$name])) {
+			return self::$config[$name];
+		}
 
-	// 	elseif ($name === false) {
-	// 		return self::$config;
-	// 	}
+		elseif ($name === false) {
+			return self::$config;
+		}
 
-	// 	else {
-	// 		return false;
-	// 	}
-	// }
+		else {
+			return false;
+		}
+	}
 
 
 	public static function debug() {
