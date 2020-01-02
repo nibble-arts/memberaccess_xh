@@ -21,6 +21,12 @@
 	float: right;
 }
 
+/*.ma_login_link::after, .ma_unlogged_block::after {
+  content: "";
+  display: table;
+  clear: both;
+}*/
+
 .ma_value {
 	/*position: relative;*/
 	/*margin: 5px 0 5px 0;*/
@@ -48,9 +54,9 @@
 	padding: 5px;
 	box-sizing: border-box;
 	margin-bottom: 10px;
-}}
+}
 
- .ma_button {
+.ma_button {
  	position: relative;
  	height: 25px;
 	margin: 5px 0 5px 0;

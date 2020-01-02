@@ -35,6 +35,7 @@ class View {
 		$o .= self::text("logging_login");
 		$o .= '</a>';
 
+		$o .= '<div class="tplvoe_clearBoth"></div>';
 		return $o;
 	}
 
@@ -140,6 +141,8 @@ class View {
 			$o .= '</a>';
 		$o .= '</div>';
 		
+		$o .= '<div class="tplvoe_clearBoth"></div>';
+
 		return $o;
 	}
 	
@@ -649,7 +652,7 @@ class View {
 				// hide on login page
 				if (!Pages::current(Access::config("login_page"))) {
 
-					// disply logout
+					// display logout
 					if (Access::logged()) {
 					    $c[$i] = View::logged(Access::user("fullname")) . $page;
 					}
