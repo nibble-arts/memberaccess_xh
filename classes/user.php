@@ -56,12 +56,6 @@ class User {
 	}
 
 
-	// user is in group
-	public function is_in_group($group) {
-		debug(Groups::user_is_in_group($this->data["username"], $group));
-	}
-
-
 	// magic method
 	public function __call($key, $attr) {
 		return $this->get($key);

@@ -4,36 +4,12 @@ namespace ma;
 
 class Config {
 
-	private static $config;
+	private static $data;
 
-
-	// init config
 	public static function init($data) {
-		self::$config = $data["memberaccess"];
+
+		self::$data = $data;
 	}
 
-
-	// get config parameter
-	public static function get($name = false) {
-
-		if (isset(self::$config[$name])) {
-			return self::$config[$name];
-		}
-
-		elseif ($name === false) {
-			return self::$config;
-		}
-
-		else {
-			return false;
-		}
-	}
-
-
-	// user magic method
-	public static function __callStatic($name, $attr) {
-		return self::get($name);
-	}
+	
 }
-
-?>
