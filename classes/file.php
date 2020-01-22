@@ -42,7 +42,7 @@ class File {
 
 	private static function backup($path) {
 
-		$cnt = Access::config("backup_cnt");
+		$cnt = Config::backup_cnt();
 		$i = 0;
 
 		$name = pathinfo($path, PATHINFO_FILENAME);

@@ -162,7 +162,7 @@ class Groups {
 			$groups = array_filter(explode(",", $groups));
 		}
 
-		if (count($groups)) {
+		if ($groups && count($groups)) {
 
 			foreach ($groups as $group) {
 

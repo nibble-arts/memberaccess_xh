@@ -49,15 +49,15 @@ class Access {
 	// initialise access class
 	public static function init ($config, $text) {
 
-		self::$config = $config["memberaccess"];
-
-		Log::init(self::config("logpath") . "memberaccess/log.txt");
-
+		// self::$config = $config["memberaccess"];
 		Session::load();
+		Config::init($config);
 		View::init($text);
 
-		Users::load(self::config("basepath") . "memberaccess/users.txt");
-		Groups::load(self::config("basepath") . "memberaccess/group.txt");
+		Log::init(Config::logpath() . "memberaccess/log.txt");
+
+		Users::load(Config::basepath() . "memberaccess/users.txt");
+		Groups::load(Config::basepath() . "memberaccess/group.txt");
 
 	}
 
@@ -610,6 +610,20 @@ class Access {
 	}
 
 	
+
+	// check if user has group rights or is admin
+	public static function has_rights($groups) {
+
+		if (self::$user) {
+
+			$username = self::user("username");
+			return Groups::user_is_in_group($username, $groups) || self::admin();
+		}
+
+		return false;
+	}
+
+
 	// check for logged user
 	public static function logged() {
 
@@ -634,7 +648,7 @@ class Access {
 			else {
 				
 				// timeout -> remove user
-				if ((time() - $status) > self::config("register_timeout")) {
+				if ((time() - $status) > Config::register_timeout()) {
 
 // ToDo check autoremove of user
 					// remove user
@@ -651,7 +665,7 @@ class Access {
 		}
 	}
 
-	
+
 	// check if admin
 	public static function admin() {
 		return self::$admin;
@@ -677,20 +691,20 @@ class Access {
 	
 
 	// get config parameter
-	public static function config($name = false) {
+	// public static function config($name = false) {
 
-		if (isset(self::$config[$name])) {
-			return self::$config[$name];
-		}
+	// 	if (isset(self::$config[$name])) {
+	// 		return self::$config[$name];
+	// 	}
 
-		elseif ($name === false) {
-			return self::$config;
-		}
+	// 	elseif ($name === false) {
+	// 		return self::$config;
+	// 	}
 
-		else {
-			return false;
-		}
-	}
+	// 	else {
+	// 		return false;
+	// 	}
+	// }
 
 
 	public static function debug() {

@@ -31,7 +31,7 @@ class View {
 	// link to login page
 	public static function login_link() {
 
-		$o = '<a class="ma_login_link" href="' . CMSIMPLE_URL . '?' . Access::config("login_page") . '">';
+		$o = '<a class="ma_login_link" href="' . CMSIMPLE_URL . '?' . Config::login_page() . '">';
 		$o .= self::text("logging_login");
 		$o .= '</a>';
 
@@ -43,8 +43,17 @@ class View {
 	// login block
 	public static function login () {
 		
+		global $su;
 
-		$o = '<form method="post" action="' . CMSIMPLE_URL.'?'.Pages::current() . '">';
+		if (Config::login_return()) {
+			$post_url = $_SERVER['HTTP_REFERER'];
+		}
+		else {
+			$post_url = CMSIMPLE_URL . '?' . Pages::current();
+		}
+
+
+		$o = '<form method="post" action="' . $post_url . '">';
 			$o .= '<div class="ma_login_block">';
 				
 				if ($error_code = Message::failure()) {
@@ -89,14 +98,14 @@ class View {
 				// login button
 				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
-					$o .= ' <a class="ma_button" href="?' . Access::config("login_forgotten") . '&action=ma_forgotten">';
+					$o .= ' <a class="ma_button" href="?' . Config::login_forgotten() . '&action=ma_forgotten">';
 					$o .= self::text("logging_forgotten");
 					$o .= '</a>';
 				$o .= '</div></p>';
 				
 				// register link
 				$o .= '<p><div class="ma_value">';
-					$o .= ' <a class="ma_button" href="?' . Access::config("login_register") . '&action=ma_register">';
+					$o .= ' <a class="ma_button" href="?' . Config::login_register() . '&action=ma_register">';
 					$o .= self::text ("logging_register");
 					$o .= '</a>';
 				$o .= '</div>';
@@ -123,13 +132,13 @@ class View {
 
 			// if logout on restricted page, use logout_page parameter for new page
 			// or allways use logout page is true
-			if (Pages::is_restricted(Pages::current()) || Access::config("logout_allways_use_link")) {
-				$logout_page = Access::config("logout_page");
+			if (Pages::is_restricted(Pages::current()) || Config::logout_allways_use_link()) {
+				$logout_page = Config::logout_page();
 			}
 
 
 			// profile
-			$o .= ' <a href="' . CMSIMPLE_URL.'?'. Access::config("profile_page") . '&action=ma_profile">';
+			$o .= ' <a href="' . CMSIMPLE_URL.'?'. Config::profile_page() . '&action=ma_profile">';
 				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/profile.png">';
 			$o .= '</a>';
 
@@ -269,7 +278,7 @@ class View {
 
 		// on register use profile as target page
 		if ($function == "register") {
-			$target_page = Access::config("login_page");
+			$target_page = Config::login_page();
 		}
 
 		// use current page as target
@@ -644,13 +653,13 @@ class View {
 	public static function display_all_pages(&$c) {
 
 
-		if (Access::config("display_all_pages") && (!Session::$adm || (Session::$adm && !Session::$edit))) {
+		if (Config::display_all_pages() && (!Session::$adm || (Session::$adm && !Session::$edit))) {
 
 			// add at all pages
 			foreach ($c as $i=>$page) {
 
 				// hide on login page
-				if (!Pages::current(Access::config("login_page"))) {
+				if (!Pages::current(Config::login_page())) {
 
 					// display logout
 					if (Access::logged()) {
