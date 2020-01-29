@@ -1,7 +1,7 @@
 <?php
 
 $plugin_tx['memberaccess']['username']="Benutzername";
-$plugin_tx['memberaccess']['fullname']="Name";
+$plugin_tx['memberaccess']['fullname']="Ganzer Name";
 $plugin_tx['memberaccess']['email']="E-Mail";
 $plugin_tx['memberaccess']['email_sent']="E-Mail versendet";
 $plugin_tx['memberaccess']['email_sent_failure']="Fehler beim E-Mail versandt. Bitte kontaktieren Sie den Administrator.";
@@ -15,7 +15,7 @@ $plugin_tx['memberaccess']['password_forgotten']="Passwort vergessen";
 $plugin_tx['memberaccess']['user_pass_missing']="Benutzername oder Passwort fehlt";
 $plugin_tx['memberaccess']['user_pass_failure']="Benutzername oder Passwort nicht korrekt";
 $plugin_tx['memberaccess']['user_add']="Benutzer hinzufügen";
-//$plugin_tx['memberaccess']['confirm_register']="Die Registrierung war erfolgreich. Es wurde ein Mail an Sie versandt. Rufen Sie den Bestätigungslink auf, um das Konto zu aktivieren.";
+$plugin_tx['memberaccess']['confirm_register_mail']="Die Registrierung war erfolgreich. Es wurde ein Mail an Sie versandt. Rufen Sie den Bestätigungslink auf, um das Konto zu aktivieren.";
 $plugin_tx['memberaccess']['confirm_register']="Die Registrierung war erfolgreich. Sie können sich jetzt mit ihrem Benutzernamen und Passwort anmelden.";
 $plugin_tx['memberaccess']['confirm_not']="Das Konto wurde noch nicht bestätigt. Zum Aktivieren bestätigen Sie den Link in der an Sie versandten Mail.";
 $plugin_tx['memberaccess']['confirm_mail_send_error']="Fehler beim Versandt der Mail. Bitte prüfen Sie die Email-Adresse.";
@@ -55,9 +55,19 @@ $plugin_tx['memberaccess']['group_active']="Zugriffsbeschränkung aktiv";
 $plugin_tx['memberaccess']['group_save']="Gruppen speichern";
 $plugin_tx['memberaccess']['group_remove_user']="Benutzer von der Gruppe entfernen";
 $plugin_tx['memberaccess']['description']="Komma separieren Liste der aktiven Gruppen. Standardmäßig besitzen alle Gruppen Leserechte, Schreibrechte können durch ein :w nach dem Gruppennamen gesetzt werden.";
+
 $plugin_tx['memberaccess']['cf_basepath']="Pfad zu den Logindaten";
+$plugin_tx['memberaccess']['cf_logpath']="Pfad für das Aktivitätslogbuch";
+$plugin_tx['memberaccess']['cf_backup_cnt']="Anzahl der Log-Versionen";
 $plugin_tx['memberaccess']['cf_login_autologin']="Beim erneuten Aufruf automatisch anmelden";
 $plugin_tx['memberaccess']['cf_login_page']="CMS-Seite, die beim Abmelden von gesperrten Seite geladen wird.";
+$plugin_tx['memberaccess']['cf_login_register']="CMS-Seite, die für eine Neuregistrierung geladen wird.";
+$plugin_tx['memberaccess']['cf_login_forgotten']="CMS-Seite, die zum Beantragen eines neuen Passwortes geladen wird.";
+$plugin_tx['memberaccess']['cf_register_timeout']="Sekunden, nach denen ein beantragtes Konto ohne Bestätigung gelöscht wird.";
+$plugin_tx['memberaccess']['cf_register_confirm']="Die Email-Bestätigung verwenden";
+
+$plugin_tx['memberaccess']['cf_logout_page']="CMS-Seite, die nach dem Logout aufgerufen wird, wenn sich der Benutzer auf einer für ihn gesperrten Seite befindet.";
+
 $plugin_tx['memberaccess']['cf_logout_allways_use_link']="Beim Abmelden immer die Seite laden.";
 $plugin_tx['memberaccess']['cf_profile_page']="CMS-Seite mit den Profil-Einstellungen";
 $plugin_tx['memberaccess']['cf_display_all_pages']="Logout/Anmelde-Funktion auf allen Seiten anzeigen";

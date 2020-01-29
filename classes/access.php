@@ -256,29 +256,43 @@ class Access {
 							// password check ok
 							elseif (($hash = Session::param("ma_password_new")) && Session::param("ma_password_check")) {
 
+
+								// create user data
 								$uuid = uniqid();
 
 								$user_data->set([
 									"hash" => Hash::create($hash),
 									"username" => Session::param("ma_username"),
 									"fullname" => Session::param("ma_fullname"),
-									"email" => Session::param("ma_email"),
-									"id" => $uuid
+									"email" => Session::param("ma_email")
 								]);
 
+								// use confirmation mail
+								if (Config::register_confirm()) {
+									$user_data->set("id", $uuid);
+									$user_data->set("status", time());
 
-								// send confirmation mail
-								$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::param("ma_username") . "&ma_uuid=" . $uuid;
+									// send confirmation mail
+									$link = CMSIMPLE_URL . '?' . Pages::$su . "&action=confirm&ma_username=" . Session::param("ma_username") . "&ma_uuid=" . $uuid;
 
 
-								// mail versand
-								Mail::send([
-									"to" => $user_data->get("email"),
-									"subject" => View::text("confirm_subject"),
-									"message" => View::text("confirm_message") . "\n\n" . $link
-								]);
-								
-								Message::success("confirm_register");
+									// mail versand
+									Mail::send([
+										"to" => $user_data->get("email"),
+										"subject" => View::text("confirm_subject"),
+										"message" => View::text("confirm_message") . "\n\n" . $link
+									]);
+									
+									Message::success("confirm_register_mail");
+								}
+
+								else {
+									$user_data->set("id", "");
+									$user_data->set("status", -1);
+
+									Message::success("confirm_register");
+								}
+
 
 								// add user to userfile
 								Users::add_user(Session::param("ma_username"), $user_data);
