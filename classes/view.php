@@ -402,7 +402,9 @@ class View {
 		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
 
 		$users = Users::get_users();
-		asort($users);
+
+		// sort
+		self::natksort($users);
 
 		if ($error_code = Message::failure()) {
 			$o .= '<div class="xh_warning">';
@@ -639,6 +641,22 @@ class View {
 		natcasesort($user_list);
 
 		return $user_list;
+	}
+
+
+	// sort assoziative array naturally
+	private static function natksort(&$array) {
+
+		$keys = array_keys($array);
+		natcasesort($keys);
+
+		foreach ($keys as $k) {
+		    $new_array[$k] = $array[$k];
+		}
+
+		$array = $new_array;
+
+		return true;
 	}
 
 
