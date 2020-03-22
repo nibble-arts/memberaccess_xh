@@ -52,7 +52,7 @@ Shows a list of the resticted pages the user is granted access, sorted by page n
 administration
 --------------
 
-The administration can be used on the frontend using the admin group on a special page. Both the member data (except user name) and the groups can be edited.
+The administration can be used on the frontend using the admin group on special pages. Both the member data (except user name) and the groups can be edited. Each access action is recorded in a log file.
 
 ToDos
 -----
