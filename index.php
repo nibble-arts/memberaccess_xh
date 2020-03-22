@@ -84,9 +84,21 @@ function memberaccess($function = false) {
 			}
 			break;
 
-		case "administration":
+		case "users":
 			if (ma\Access::logged() && ma\Access::admin()) {
-				$o .= ma\View::administration();
+				$o .= ma\View::users();
+			}
+			break;
+
+		case "groups":
+			if (ma\Access::logged() && ma\Access::admin()) {
+				$o .= ma\View::groups();
+			}
+			break;
+
+		case "log":
+			if (ma\Access::logged() && ma\Access::admin()) {
+				$o .= ma\View::log();
 			}
 			break;
 			

@@ -389,14 +389,14 @@ class View {
 
 
 	// member administration
-	public static function administration () {
+	public static function users () {
 
 		global $onload;
 		
 		$o = "<h2>User Administration</h2>";
 
 		// return script include
-		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
+		$o .= '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
 
 		// add to onload
 		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
@@ -514,6 +514,22 @@ class View {
 
 		$o .= '</form>';
 
+		return $o;
+	}
+
+
+	public static function groups () {
+
+		global $onload;
+		
+		$o = "<h2>Group Administration</h2>";
+
+		// return script include
+		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
+
+		// add to onload
+		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+
 
 		//=================================================
 		// administrate groups
@@ -537,13 +553,18 @@ class View {
 				// group name
 				$o .= '<hr><h4>' . $group->group() . '</h4>';
 
+
 				// users in group
 				$user_list = self::create_user_list($group);
+
 				$o .= '<p>' . implode(", ", $user_list) . '</p>';
 
 				// create list of unused users
 				$new_user_list = array_diff(Users::get_user_names(), $group->users());
 
+				// sort
+				natcasesort($new_user_list);
+				
 				// add user selector
 				$o .= HTML::select($new_user_list, [
 					"name" => "user"
@@ -573,6 +594,22 @@ class View {
 		}
 
 
+		return $o;
+	}
+
+
+	public static function log() {
+
+		global $onload;
+		
+		$o = "<h2>Logfile</h2>";
+
+		// return script include
+		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
+
+		// add to onload
+		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+
 		//=================================================
 		// show logfile
 		$o .= "<h2>Logfile</h2>";
@@ -598,6 +635,8 @@ class View {
 				"title" => View::text("group_remove_user")
 			]);
 		}
+
+		natcasesort($user_list);
 
 		return $user_list;
 	}
