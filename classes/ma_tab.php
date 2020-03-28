@@ -32,7 +32,7 @@ function ma_tab($page) {
 			"id" => "ma_active"
 		]);
 		
-		$o .= " " . ma\View::text('group_active') . "</p>";
+		$o .= " " . ma\Text::get('group_active') . "</p>";
 		
 
 		// input field for group list
@@ -45,7 +45,7 @@ function ma_tab($page) {
 
 
 		// access control description text
-		$o .= '<p>' . ma\View::text ('description') . '</p>';
+		$o .= '<p>' . ma\Text::get ('description') . '</p>';
 		
 		
 		// page description for automatic list
@@ -59,7 +59,7 @@ function ma_tab($page) {
 
 
 		$o .= " " . ma\HTML::input([
-			"value" => ma\View::text ("access_save"),
+			"value" => ma\Text::get ("access_save"),
 			"type" => "submit",
 			"name" => "memberaccess",
 			"id" => "memberaccess"

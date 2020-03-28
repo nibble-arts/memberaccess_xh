@@ -86,6 +86,9 @@ class Pages {
 
 					// hide page and remove restricted entry
 					self::$c[$page ["id"]] = '#CMSimple hide#';
+					// self::$c[$page ["id"]] = Text::hidden_message();
+
+
 					unset(self::$restricted[$idx]);
 				}
 			}

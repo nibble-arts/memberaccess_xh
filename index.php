@@ -80,7 +80,7 @@ function memberaccess($function = false) {
 			}
 
 			else {
-				$o .= '<p>' . ma\View::text("logging_text") . '</p>';
+				$o .= '<p>' . ma\Text::get("logging_text") . '</p>';
 			}
 			break;
 

@@ -56,6 +56,8 @@ $plugin_tx['memberaccess']['group_save']="Gruppen speichern";
 $plugin_tx['memberaccess']['group_remove_user']="Benutzer von der Gruppe entfernen";
 $plugin_tx['memberaccess']['description']="Komma separieren Liste der aktiven Gruppen. Standardmäßig besitzen alle Gruppen Leserechte, Schreibrechte können durch ein :w nach dem Gruppennamen gesetzt werden.";
 
+$plugin_tx['memberaccess']['hidden_message']="Um diese Seite sehen zu können, müssen Sie angemeldet sein.";
+
 $plugin_tx['memberaccess']['cf_basepath']="Pfad zu den Logindaten";
 $plugin_tx['memberaccess']['cf_logpath']="Pfad für das Aktivitätslogbuch";
 $plugin_tx['memberaccess']['cf_backup_cnt']="Anzahl der Log-Versionen";

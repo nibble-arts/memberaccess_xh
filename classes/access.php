@@ -52,7 +52,8 @@ class Access {
 		// self::$config = $config["memberaccess"];
 		Session::load();
 		Config::init($config);
-		View::init($text);
+		// View::init($text);
+		Text::init($text["memberaccess"]);
 
 		Log::init(Config::logpath() . "memberaccess/log.txt");
 
@@ -178,8 +179,8 @@ class Access {
 						// send mail
 						$result = Mail::send([
 							"to" => $email,
-							"subject" => View::text("logging_forgotten_mail_subject"),
-							"message" => View::text("logging_forgotten_mail_message") . "\n\n" . $pwd
+							"subject" => Text::get("logging_forgotten_mail_subject"),
+							"message" => Text::get("logging_forgotten_mail_message") . "\n\n" . $pwd
 						]);
 
 
@@ -279,8 +280,8 @@ class Access {
 									// mail versand
 									Mail::send([
 										"to" => $user_data->get("email"),
-										"subject" => View::text("confirm_subject"),
-										"message" => View::text("confirm_message") . "\n\n" . $link
+										"subject" => Text::get("confirm_subject"),
+										"message" => Text::get("confirm_message") . "\n\n" . $link
 									]);
 									
 									Message::success("confirm_register_mail");

@@ -9,30 +9,30 @@ class View {
 	private static $text;
 	
 	// init view
-	public static function init ($text) {
+	// public static function init ($text) {
 
-		self::$text = $text['memberaccess'];
+	// 	self::$text = $text['memberaccess'];
 
-	}
+	// }
 	
 	
-	// get multilingual text
-	public static function text ($code) {
+	// // get multilingual text
+	// public static function text ($code) {
 
-		if (isset(self::$text [$code])) {
-			return self::$text [$code];
-		}
-		else {
-			return $code;
-		}
-	}
+	// 	if (isset(self::$text [$code])) {
+	// 		return self::$text [$code];
+	// 	}
+	// 	else {
+	// 		return $code;
+	// 	}
+	// }
 	
 	
 	// link to login page
 	public static function login_link() {
 
 		$o = '<a class="ma_login_link" href="' . CMSIMPLE_URL . '?' . Config::login_page() . '">';
-		$o .= self::text("logging_login");
+		$o .= Text::get("logging_login");
 		$o .= '</a>';
 
 		$o .= '<div class="tplvoe_clearBoth"></div>';
@@ -58,13 +58,13 @@ class View {
 				
 				if ($error_code = Message::failure()) {
 					$o .= '<div class="xh_warning">';
-						$o .= self::text($error_code);
+						$o .= Text::get($error_code);
 					$o .= '</div>';
 				}
 
 				if ($error_code = Message::success()) {
 					$o .= '<div class="xh_info">';
-						$o .= self::text($error_code);
+						$o .= Text::get($error_code);
 					$o .= '</div>';
 				}
 
@@ -73,14 +73,14 @@ class View {
 					$o .= '<img class="ma_big_icon" src="' . MA_PLUGIN_BASE . 'images/lock.png">';
 
 					$o .= '<h1>';
-						$o .= self::text ("logging_title");
+						$o .= Text::get ("logging_title");
 					$o .= '</h1>';
 				$o .= '</div>';
 	
 				// user field
 				$o .= '<div class="ma_value">';
 					$o .= '<div class="ma_label">';
-						$o .= self::text ("logging_user");
+						$o .= Text::get ("logging_user");
 					$o .= '</div>';
 
 					$o .= '<input class="ma_field" type="text" name="ma_user" value="' . Session::get("ma_username") . '">';
@@ -89,7 +89,7 @@ class View {
 				// password field
 				$o .= '<div class="ma_value">';
 					$o .= '<div class="ma_label">';
-						$o .= self::text ("logging_password");
+						$o .= Text::get ("logging_password");
 					$o .= '</div>';
 
 					$o .= '<input class="ma_field" type="password" name="ma_password">';
@@ -99,14 +99,14 @@ class View {
 				$o .= '<p><div class="ma_value">';
 					$o .= '<input class="ma_button" type="submit" name="ma_login" value="Anmelden">';
 					$o .= ' <a class="ma_button" href="?' . Config::login_forgotten() . '&action=ma_forgotten">';
-					$o .= self::text("logging_forgotten");
+					$o .= Text::get("logging_forgotten");
 					$o .= '</a>';
 				$o .= '</div></p>';
 				
 				// register link
 				$o .= '<p><div class="ma_value">';
 					$o .= ' <a class="ma_button" href="?' . Config::login_register() . '&action=ma_register">';
-					$o .= self::text ("logging_register");
+					$o .= Text::get ("logging_register");
 					$o .= '</a>';
 				$o .= '</div>';
 			$o .= '</div></p>';
@@ -127,7 +127,7 @@ class View {
 
 		$o = '<div class="ma_unlogged_block">';
 
-			// $o .= View::text("logging_as") . " ";
+			// $o .= Text::get("logging_as") . " ";
 			$o .= $name;
 
 			// if logout on restricted page, use logout_page parameter for new page
@@ -146,7 +146,7 @@ class View {
 			// logout
 			$o .= ' <a href="' . CMSIMPLE_URL.'?'. $logout_page . '&action=ma_logout">';
 				$o .= '<img class="ma_small_icon" src="' . MA_PLUGIN_BASE . 'images/logout.png" title="Profil">';
-			// $o .= self::text ("logging_logout");
+			// $o .= Text::get ("logging_logout");
 			$o .= '</a>';
 		$o .= '</div>';
 		
@@ -164,7 +164,7 @@ class View {
 		
 		if ($success = Message::success()) {
 			$o .= '<div class="xh_info">';
-				$o .= self::text($success);
+				$o .= Text::get($success);
 			$o .= '</div>';
 		}
 
@@ -175,16 +175,16 @@ class View {
 			// save success info
 			if ($failure = Message::failure()) {
 				$o .= '<div class="xh_info">';
-					$o .= self::text($failure);
+					$o .= Text::get($failure);
 				$o .= '</div>';
 			}
 
 			$o .= '<form method="post" action="' . CMSIMPLE_URL.'?'. Pages::current() . '">';
 
-				$o .= HTML::div(["content" => View::text("logging_forgotten_text"), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => Text::get("logging_forgotten_text"), "class" => "ma_label"]);
 
 
-				$o .= HTML::div(["content" => View::text("username"), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => Text::get("username"), "class" => "ma_label"]);
 
 				$o .= HTML::input([
 					"type" => "input",
@@ -193,7 +193,7 @@ class View {
 				]);
 
 
-				$o .= HTML::div(["content" => View::text("email"), "class" => "ma_label"]);
+				$o .= HTML::div(["content" => Text::get("email"), "class" => "ma_label"]);
 
 				$o .= HTML::input([
 					"type" => "input",
@@ -205,7 +205,7 @@ class View {
 
 					$o .= HTML::input([
 						"type" => "submit",
-						"value" => View::text("logging_request")
+						"value" => Text::get("logging_request")
 					]);
 
 				$o .= '</p>';
@@ -293,14 +293,14 @@ class View {
 			// save success info
 			if (Message::success()) {
 				$o .= '<div class="xh_info">';
-					$o .= self::text("profile_saved");
+					$o .= Text::get("profile_saved");
 				$o .= '</div>';
 			}
 
 
 			elseif ($error_code = Message::failure()) {
 				$o .= '<div class="xh_warning">';
-					$o .= self::text($error_code);
+					$o .= Text::get($error_code);
 				$o .= '</div>';
 			}
 
@@ -322,7 +322,7 @@ class View {
 				$o .= '</p>';
 
 					// show label
-					$o .= HTML::div(["content" => View::text($idx), "class" => "ma_label"]);
+					$o .= HTML::div(["content" => Text::get($idx), "class" => "ma_label"]);
 
 					// edit -> username can't be changed
 					if ($type == "disabled") {
@@ -399,7 +399,7 @@ class View {
 		$o .= '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
 
 		// add to onload
-		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+		$onload .= "ma_admin_init('" . Text::get("delete_confirm") . "');";
 
 		$users = Users::get_users();
 
@@ -408,7 +408,7 @@ class View {
 
 		if ($error_code = Message::failure()) {
 			$o .= '<div class="xh_warning">';
-				$o .= self::text($error_code);
+				$o .= Text::get($error_code);
 			$o .= '</div>';
 		}
 
@@ -530,7 +530,7 @@ class View {
 		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
 
 		// add to onload
-		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+		$onload .= "ma_admin_init('" . Text::get("delete_confirm") . "');";
 
 
 		//=================================================
@@ -575,7 +575,7 @@ class View {
 				$o .= " " . HTML::input([
 					"type" => "submit",
 					"name" => "ma_add_user",
-					"value" => View::text("user_add")
+					"value" => Text::get("user_add")
 				]);
 
 				// hidden data
@@ -610,7 +610,7 @@ class View {
 		$o = '<script type="text/javascript" src="' . MA_PLUGIN_BASE . 'script/admin.js"></script>';
 
 		// add to onload
-		$onload .= "ma_admin_init('" . View::text("delete_confirm") . "');";
+		$onload .= "ma_admin_init('" . Text::get("delete_confirm") . "');";
 
 		//=================================================
 		// show logfile
@@ -634,7 +634,7 @@ class View {
 				"content" => $user,
 				"class" => "delete",
 				"href" => CMSIMPLE_URL . '?' . Pages::$su . '&action=ma_remove_user_from_group&group=' . $group->group() . '&user=' . $user,
-				"title" => View::text("group_remove_user")
+				"title" => Text::get("group_remove_user")
 			]);
 		}
 
