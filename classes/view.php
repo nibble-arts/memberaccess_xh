@@ -35,7 +35,7 @@ class View {
 		$o .= Text::get("logging_login");
 		$o .= '</a>';
 
-		$o .= '<div class="tplvoe_clearBoth"></div>';
+		$o .= '<div style="clear:both;"></div>';
 		return $o;
 	}
 
@@ -150,7 +150,7 @@ class View {
 			$o .= '</a>';
 		$o .= '</div>';
 		
-		$o .= '<div class="tplvoe_clearBoth"></div>';
+		$o .= '<div style="clear:both;"></div>';
 
 		return $o;
 	}
