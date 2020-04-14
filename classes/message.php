@@ -21,7 +21,7 @@ class Message {
 		}
 
 		else {
-			return self::$success;
+			return Text::get(self::$success);
 		}
 	}
 
@@ -33,7 +33,27 @@ class Message {
 		}
 
 		else {
-			return self::$failure;
+			return Text::get(self::$failure);
 		}
+	}
+
+
+	// render messages
+	public static function render() {
+		$o = "";
+
+		if (self::$success != "") {
+			$o .= '<div class="xh_info">';
+				$o .= self::success();
+			$o .= '</div>';
+		}
+
+		if (self::$failure != "") {
+			$o .= '<div class="xh_warning">';
+				$o .= self::failure();
+			$o .= '</div>';
+		}
+
+		return $o;
 	}
 }

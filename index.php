@@ -101,7 +101,14 @@ function memberaccess($function = false) {
 				$o .= ma\View::log();
 			}
 			break;
-			
+
+
+		case "newsletter":
+			if (ma\Access::logged() && ma\Access::admin()) {
+				$o .= ma\View::newsletter();
+			}
+			break;
+
 	}
 	
 	return $o;

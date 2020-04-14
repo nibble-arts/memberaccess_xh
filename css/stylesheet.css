@@ -27,6 +27,12 @@
   clear: both;
 }*/
 
+
+.ma_title {
+	font-size: 105%;
+	font-weight: bold;
+}
+
 .ma_value {
 	/*position: relative;*/
 	/*margin: 5px 0 5px 0;*/

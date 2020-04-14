@@ -426,6 +426,7 @@ class View {
 			$o .= '<th>Email</th>';
 			$o .= '<th>Groups</th>';
 			$o .= '<th>ID</th>';
+			$o .= '<th>Newsletter</th>';
 			$o .= '<th>Status</th>';
 			$o .= '<th>Aktion</th>';
 
@@ -461,9 +462,14 @@ class View {
 						$o .= '<span class="ma_groups_list">' . implode(", ", Groups::get_groups_of_user($user->username())) . '</span>';
 					$o .= '</td>';
 
-					// groups
+					// id
 					$o .= '<td>';
 						$o .= HTML::input(["type" => "text", "name" => "ma_id_" . $name, "value" => $user->id()]);
+					$o .= '</td>';
+
+					// functions
+					$o .= '<td>';
+						$o .= HTML::input(["type" => "text", "name" => "ma_functions_" . $name, "value" => $user->functions()]);
 					$o .= '</td>';
 
 					// status
@@ -739,4 +745,37 @@ class View {
 		return $o;
 	}
 
+
+	//=================================================
+	// display newsletter
+	public static function newsletter() {
+
+		global $su;
+
+		$o = Message::render();
+
+		$o .= '<div class="ma_newsletter">';
+
+			$o .= '<form method="post" action="?' . $su . '">';
+
+				$o .= '<div class="ma_title">Newsletter</div>';
+
+				$o .= '<div class="ma_label">' . Text::newsletter_subject() . '</div>';
+				$o .= '<input type="input" size="50" name="ma_newsletter_subject">';
+
+				$o .= '<div class="ma_label">' . Text::newsletter_text() . '</div>';
+				$o .= '<textarea name="ma_newsletter_text">';
+				$o .= '</textarea>';
+
+				$o .= '<input type="submit" name="ma_newsletter_send" value="' . Text::newsletter_send() . '">';
+
+				$o .= '<input type="hidden" name="action" value="ma_newsletter">';
+
+			$o .= '</form>';
+
+		$o .= '</div>';
+
+
+		return $o;
+	}
 }

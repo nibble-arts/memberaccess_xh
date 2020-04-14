@@ -12,6 +12,7 @@ class Users {
 		"fullname",
 		"email",
 		"id",
+		"functions",
 		"status",
 		"created",
 		"modified"
@@ -137,7 +138,6 @@ class Users {
 
 	// save users
 	public static function save() {
-
 		if (self::$path) {
 			File::write(self::$path, self::serialize());
 		}

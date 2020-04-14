@@ -19,7 +19,7 @@ class File {
 	public static function write ($path, $data) {
 
 		self::backup($path);
-
+		
 		$ret = false;
 
 		if ($data != "") {

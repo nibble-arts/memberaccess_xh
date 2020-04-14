@@ -56,6 +56,19 @@ class User {
 	}
 
 
+	// user has function
+	public function has_function($func) {
+
+		$funcs = explode(",", $this->functions());
+
+		if (in_array($func, $funcs)) {
+			return true;
+		}
+
+		return false;
+	}
+
+
 	// magic method
 	public function __call($key, $attr) {
 		return $this->get($key);

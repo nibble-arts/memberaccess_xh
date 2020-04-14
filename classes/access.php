@@ -32,6 +32,7 @@ class Access {
 		"email",
 		"id",
 		"status",
+		"functions",
 		"created",
 		"modified"
 	];
@@ -265,7 +266,8 @@ class Access {
 									"hash" => Hash::create($hash),
 									"username" => Session::param("ma_username"),
 									"fullname" => Session::param("ma_fullname"),
-									"email" => Session::param("ma_email")
+									"email" => Session::param("ma_email"),
+									"functions" => Session::param("ma_functions")
 								]);
 
 								// use confirmation mail
@@ -409,6 +411,7 @@ class Access {
 
 				Users::reset();
 
+
 				// create users list from http parameters
 				foreach (Session::get_param_keys() as $param) {
 
@@ -465,6 +468,12 @@ class Access {
 				Users::save();
 				Groups::save();
 
+				break;
+
+
+			case "ma_newsletter":
+
+				Newsletter::send(Session::param("ma_newsletter_subject"), Session::param("ma_newsletter_text"));
 				break;
 		}
 

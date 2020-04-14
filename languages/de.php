@@ -58,6 +58,15 @@ $plugin_tx['memberaccess']['description']="Komma separieren Liste der aktiven Gr
 
 $plugin_tx['memberaccess']['hidden_message']="Um diese Seite sehen zu können, müssen Sie angemeldet sein.";
 
+$plugin_tx['memberaccess']['newsletter_subject']="Betreff";
+$plugin_tx['memberaccess']['newsletter_text']="Newsletter Text";
+$plugin_tx['memberaccess']['newsletter_send']="Newsletter abschicken";
+$plugin_tx['memberaccess']['newsletter_sent']="Newsletter erfolgreich abgeschickt";
+$plugin_tx['memberaccess']['newsletter_count']="E-Mails versandt";
+$plugin_tx['memberaccess']['newsletter_sub_txt_missing']="Betreff oder Text fehlt";
+$plugin_tx['memberaccess']['newsletter_failure']="Fehler beim Versenden des Newsletters";
+
+
 $plugin_tx['memberaccess']['cf_basepath']="Pfad zu den Logindaten";
 $plugin_tx['memberaccess']['cf_logpath']="Pfad für das Aktivitätslogbuch";
 $plugin_tx['memberaccess']['cf_backup_cnt']="Anzahl der Log-Versionen";
