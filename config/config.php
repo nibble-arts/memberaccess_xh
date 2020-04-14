@@ -16,3 +16,4 @@ $plugin_cf['memberaccess']['profile_page']="Mitgliederbereich/Profil";
 $plugin_cf['memberaccess']['display_all_pages']="true";
 $plugin_cf['memberaccess']['group_default']="guest";
 $plugin_cf['memberaccess']['group_admin']="admin";
+$plugin_cf['memberaccess']['email_reply']="noreply@video-stammtisch.org";

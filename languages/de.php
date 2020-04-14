@@ -85,3 +85,4 @@ $plugin_tx['memberaccess']['cf_display_all_pages']="Logout/Anmelde-Funktion auf 
 $plugin_tx['memberaccess']['cf_group_default']="Default-Gruppe, die bei der Registrierung automatisch vergeben wird. Es können auch mehrere Gruppen mit Komma separiert angegeben werden.";
 $plugin_tx['memberaccess']['cf_group_admin']="Gruppe mit Administrationsrechten";
 $plugin_tx['memberaccess']['cf_login_return']="Nach der Anmeldung zurück zur aufrufenden Seite";
+$plugin_tx['memberaccess']['cf_email_reply']="E-Mail-Adresse der Systems für Antworten";
