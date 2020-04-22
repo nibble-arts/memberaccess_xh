@@ -475,6 +475,12 @@ class Access {
 
 				Newsletter::send(Session::param("ma_newsletter_subject"), Session::param("ma_newsletter_text"));
 				break;
+
+
+			case "ma_unsubscribe":
+
+				Newsletter::unsubscribe(Session::param("ma_newsletter_user"));
+				break;
 		}
 
 		return $o;

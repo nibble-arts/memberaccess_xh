@@ -65,6 +65,13 @@ $plugin_tx['memberaccess']['newsletter_sent']="Newsletter erfolgreich abgeschick
 $plugin_tx['memberaccess']['newsletter_count']="E-Mails versandt";
 $plugin_tx['memberaccess']['newsletter_sub_txt_missing']="Betreff oder Text fehlt";
 $plugin_tx['memberaccess']['newsletter_failure']="Fehler beim Versenden des Newsletters";
+$plugin_tx['memberaccess']['newsletter_addresses']="Newsletter Abonnenten";
+$plugin_tx['memberaccess']['newsletter_unsubscribe']="Wenn Sie den Newsletters nicht mehr erhalten wollen, klicken Sie bitte auf folgenden Link.";
+$plugin_tx['memberaccess']['newsletter_unsubscribe_text']="Abbestellen";
+
+$plugin_tx['memberaccess']['newsletter_unsubscribe_link']="Sollte der Link nicht funktionieren, kopieren Sie bitte die folgende Zeile in Ihren Browser.";
+$plugin_tx['memberaccess']['newsletter_unsubscribed']="Sie wurden vom Newsletter abgemeldet.";
+$plugin_tx['memberaccess']['newsletter_not_subscribed']="Sie haben den Newsletter nicht abonniert.";
 
 
 $plugin_tx['memberaccess']['cf_basepath']="Pfad zu den Logindaten";

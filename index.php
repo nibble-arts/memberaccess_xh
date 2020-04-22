@@ -109,6 +109,9 @@ function memberaccess($function = false) {
 			}
 			break;
 
+		case "unsubscribe":
+			$o .= ma\View::unsubscribed();
+
 	}
 	
 	return $o;

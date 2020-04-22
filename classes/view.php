@@ -269,7 +269,7 @@ class View {
 	public static function profile($function, $display_fields = false) {
 
 		if (!$display_fields) {
-			$display_fields = ["username" => "text", "fullname" => "text", "email" => "text"];
+			$display_fields = ["username" => "text", "fullname" => "text", "email" => "text", "function" => "text"];
 		}
 
 
@@ -357,6 +357,7 @@ class View {
 
 				// $o .= '<br>';
 			}
+
 
 			$o .= '</p>';
 
@@ -754,11 +755,15 @@ class View {
 
 		$o = Message::render();
 
+		$cnt = count(Newsletter::get_addresses());
+
 		$o .= '<div class="ma_newsletter">';
 
 			$o .= '<form method="post" action="?' . $su . '">';
 
-				$o .= '<div class="ma_title">Newsletter</div>';
+				$o .= '<h2>Newsletter</h2>';
+
+				$o .= $cnt . ' ' . Text::newsletter_addresses();
 
 				$o .= '<div class="ma_label">' . Text::newsletter_subject() . '</div>';
 				$o .= '<input type="input" size="50" name="ma_newsletter_subject">';
@@ -777,5 +782,44 @@ class View {
 
 
 		return $o;
+	}
+
+
+	// unsibscribe message
+	public static function unsubscribe($user) {
+
+		global $su;
+
+		$o = '<hr>';
+
+		$o .= '<p>';
+			$o .= Text::newsletter_unsubscribe($user);
+
+			$link .= 'http://' . $_SERVER['HTTP_HOST'] . '?' . Config::unsubscribe_page() . '&action=ma_unsubscribe&ma_newsletter_user=' . $user;
+		$o .= '</p>';
+
+
+		$o .= '<p>';
+			$o .= ' <a href="' . $link . '">' . Text::newsletter_unsubscribe_text() . '</a>';
+		$o .= '</p>';
+
+		$o .= '<p>';
+			$o .= Text::newsletter_unsubscribe_link();
+		$o .= '</p>';
+
+		$o .= '<p>';
+			$o .= $link;
+		$o .= '</p>';
+
+		return $o;
+	}
+
+
+	// unsubscribed page
+	public static function unsubscribed() {
+
+		Message::success(Text::newsletter_unsubscribed());
+
+		return Message::render();
 	}
 }

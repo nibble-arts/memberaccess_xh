@@ -69,6 +69,32 @@ class User {
 	}
 
 
+	// add function
+	public function add_function($func) {
+
+		$funcs = explode(",", $this->functions());
+
+		if (!in_array($func, $funcs)) {
+			$funcs[] = $func;
+		}
+
+		$this->data["functions"] = implode(",", $funcs);
+	}
+
+
+	// remove function
+	public function remove_function($func) {
+
+		$funcs = explode(",", $this->functions());
+
+		if (($idx = array_search($func, $funcs)) !== false) {
+			unset ($funcs[$idx]);
+		}
+
+		$this->data["functions"] = implode(",", $funcs);
+	}
+
+
 	// magic method
 	public function __call($key, $attr) {
 		return $this->get($key);
